@@ -40,7 +40,7 @@ CREATE TABLE field_of_activity(
     name VARCHAR(50) NOT NULL
 );
 
---Создание таблицы Улица
+--Создание таблицы Улица 
 CREATE TABLE street(
     id SERIAL PRIMARY KEY,
     name VARCHAR(25) NOT NULL
@@ -79,15 +79,6 @@ CREATE TABLE applicant(
     FOREIGN KEY (allowance_id) REFERENCES allowance (id)
 );
 
---Создание таблицы Вакансия
-CREATE TABLE vacancy(
-    id SERIAL PRIMARY KEY,
-    position_title VARCHAR(50) NOT NULL,
-    salary_amount VARCHAR(20) NOT NULL,
-    employer_id INTEGER NOT NULL,
-    FOREIGN KEY (employer_id) REFERENCES employer (id)
-);
-
 --Создание таблицы Работодатель
 CREATE TABLE employer(
     id SERIAL PRIMARY KEY,
@@ -98,6 +89,16 @@ CREATE TABLE employer(
     phone_number VARCHAR(20) NOT NULL,
     FOREIGN KEY (city_id) REFERENCES city (id),
     FOREIGN KEY (street_id) REFERENCES street (id)
+);
+
+--Создание таблицы Вакансия
+CREATE TABLE vacancy(
+    id SERIAL PRIMARY KEY,
+    position_title VARCHAR(50) NOT NULL,
+    lower_limit_of_salary INTEGER,
+    upper_limit_of_salary INTEGER,
+    employer_id INTEGER NOT NULL,
+    FOREIGN KEY (employer_id) REFERENCES employer (id)
 );
 
 

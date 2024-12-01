@@ -17,7 +17,7 @@ def get_db_connection():
 
 
 def close_db_connection(exc=None):
-    db_conn = g.pop('db_conn', None)
+    db_conn = g.pop('db_conn', exc)
     if db_conn is not None:
         db_conn.close()
 

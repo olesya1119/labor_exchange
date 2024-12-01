@@ -1,8 +1,4 @@
 from .base_model import BaseModel
-from .location import Street, City
-from .education import EducationLevel, EducationDocument
-from .education import EducationalInstitution
-from .specialization import Allowance, Specialization
 from datetime import date
 
 
@@ -12,12 +8,12 @@ class Applicant(BaseModel):
     def __init__(self, id: int, last_name: str, first_name: str,
                  middle_name: str | None, age: int, passport_number: int,
                  passport_issue_date: date,  passport_issued_by: str,
-                 city: City, street: Street, house_number: str,
+                 city_id: int, street_id: int, house_number: str,
                  phone_number: str, photo: str,
-                 education_level: EducationLevel,
-                 education_document: EducationDocument,
+                 education_level_id: int,
+                 education_document_id: int,
                  education_document_details: str, registration_date: date,
-                 allowance: Allowance | None) -> None:
+                 allowance_id: int | None) -> None:
         super().__init__(id)
         self.last_name = last_name
         self.first_name = first_name
@@ -26,36 +22,36 @@ class Applicant(BaseModel):
         self.passport_number = passport_number
         self.passport_issue_date = passport_issue_date
         self.passport_issued_by = passport_issued_by
-        self.city = city
-        self.street = street
+        self.city_id = city_id
+        self.street_id = street_id
         self.house_number = house_number
         self.phone_number = phone_number
         self.photo = photo
-        self.education_level = education_level
-        self.education_document = education_document
+        self.education_level_id = education_level_id
+        self.education_document_id = education_document_id
         self.education_document_details = education_document_details
         self.registration_date = registration_date
-        self.allowance = allowance
+        self.allowance_id = allowance_id
 
 
 class SpecializationApplicant(BaseModel):
     '''Класс, описывающий cпециальности соискателей'''
 
-    def __init__(self, id: int, applicant: Applicant,
-                 specialization: Specialization, work_experience: float
+    def __init__(self, id: int, applicant_id: int,
+                 specialization_id: int, work_experience: float
                  ) -> None:
         super().__init__(id)
-        self.applicant = applicant
-        self.specialization = specialization
+        self.applicant_id = applicant_id
+        self.specialization_id = specialization_id
         self.work_experience = work_experience
 
 
 class EducationalInstitutionApplicant(BaseModel):
     '''Класс, описывающий учебные заведения соискателей'''
 
-    def __init__(self, id: int, applicant: Applicant,
-                 educational_institution: EducationalInstitution
+    def __init__(self, id: int, applicant_id: int,
+                 educational_institution_id: int
                  ) -> None:
         super().__init__(id)
-        self.applicant = applicant
-        self.educational_institution = educational_institution
+        self.applicant_id = applicant_id
+        self.educational_institution_id = educational_institution_id

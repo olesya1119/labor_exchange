@@ -1,4 +1,3 @@
-from flask import g
 from flask import Blueprint
 from .db import get_db_connection
 
@@ -17,8 +16,7 @@ def test_connection():
 
 @app.route("/", methods=["GET"])
 def test_connection1():
-    get_db_connection()
-    cursor = g.db_conn.cursor()
+    cursor = get_db_connection().cursor()
     cursor.execute('''SELECT * FROM applicant''')
-    g.db_conn.commit()
+    get_db_connection().commit()
     return cursor.fetchall()

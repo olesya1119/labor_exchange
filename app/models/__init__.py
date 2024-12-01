@@ -7,4 +7,5 @@ from .base_model import BaseModel
 from .education import EducationalInstitution, EducationLevel, EducationDocument
 from .location import City, Street
 from .specialization import Specialization, Allowance, ApplicantRequirements, FieldOfActivity
-from .vacancy import Vacancy
+from .vacancy import Vacancy, VacancyApplicantRequirements, VacancyFieldOfActivity
+from .employer import Employer

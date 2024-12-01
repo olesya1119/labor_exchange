@@ -1,6 +1,8 @@
 import psycopg2  # type: ignore
 from flask import current_app, g
 
+# TODO: Добавить других пользователей
+
 
 def get_db_connection():
     if 'db_conn' not in g:
@@ -14,7 +16,7 @@ def get_db_connection():
     return g.db_conn
 
 
-def close_db_connection():
+def close_db_connection(exc=None):
     db_conn = g.pop('db_conn', None)
     if db_conn is not None:
         db_conn.close()
@@ -22,4 +24,3 @@ def close_db_connection():
 
 def init_db(app):
     app.teardown_appcontext(close_db_connection)
-    get_db_connection()

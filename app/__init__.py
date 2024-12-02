@@ -1,6 +1,6 @@
 from flask import Flask
 from config import Config
-from .db import init_db
+from .repositories.db import init_db
 from .routes import app as main_bp
 
 

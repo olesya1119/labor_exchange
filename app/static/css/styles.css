@@ -1,0 +1,52 @@
+@font-face {
+    font-family: 'Anonymous_Pro';
+    src: url('../fonts/Anonymous_Pro/AnonymousPro-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+body {
+    font-family: Anonymous_Pro, sans-serif;
+    background-color: #f9f3e9;
+    color: #5a3824;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+.menu {
+    display: flex;
+    background-color: #3e3e3e;
+    justify-content: center; /* Центрирует все кнопки по горизонтали */
+    align-items: center; /* Центрирует кнопки по вертикали */ 
+    align-items: center;
+    padding: 10px;
+}
+
+.navigate_link, .active_navigate_link {
+    display: inline-block;
+    box-sizing: border-box;
+    padding: 10px;
+    border: none;
+    border-radius: 35px;
+    font: normal 16px;
+    color: #252422;
+    text-overflow: ellipsis;
+    text-decoration: none; /* Убирает подчеркивание */
+    background: #CCC5B9;
+    box-shadow: 3px 3px 4px 0 rgba(0, 0, 0, 0.4);
+    text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.25);
+    margin: 0 25px; /* Добавляем промежутки между кнопками */
+    width: 150px; /* Устанавливаем одинаковую ширину для всех кнопок */
+    text-align: center; /* Центрирует текст внутри кнопок */
+}
+
+.active_navigate_link {
+    background: #E98964; /* Цвет активной кнопки */
+}
+

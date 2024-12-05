@@ -163,13 +163,12 @@ def save_applicant():
     '''
     apl_rep = ApplicantService()
     # Сохранение данных
-    apl_rep.update_table(data)
     try:
         apl_rep.update_table(data)
         return jsonify({"success": True})
     except Exception as e:
-        print(e)
-        return jsonify({"success": False, "errors": [str(e)]}), 500
+        print(e, "!!!!!!!!!!!!!!!!")
+        return jsonify({"success": False, "errors": ["ОШИБКА!!!!"]}), 500
 
 
 @app.route("/employers")

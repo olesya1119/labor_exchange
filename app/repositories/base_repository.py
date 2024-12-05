@@ -1,4 +1,3 @@
-import psycopg2  # type: ignore
 from .db import get_db_connection  # type: ignore
 from typing import Tuple
 
@@ -16,7 +15,8 @@ class BaseRepository():
                 cursor.execute(query, values)
                 get_db_connection().commit()
                 return True
-            except psycopg2.DatabaseError as e:
+            except Exception as e:
+                print("Не бойся я друг")
                 raise e
             finally:
                 cursor.close()
@@ -30,7 +30,7 @@ class BaseRepository():
             try:
                 cursor.execute(query, values)
                 return cursor.fetchall()
-            except psycopg2.DatabaseError as e:
+            except Exception as e:
                 raise e
             finally:
                 cursor.close()

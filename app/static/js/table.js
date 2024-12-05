@@ -37,10 +37,10 @@ function saveData() {
         .then(response => response.json())
         .then(result => {
             if (!result.success) {
-                alert("Ошибка сохранения");
-                //alert("Ошибка сохранения: " + result.errors.join(', '));
+                alert("Ошибка сохранения: " + result.errors.join(', '));
             }
         })
+        /*TODO : При сохрании оно летит. Почему?? */ 
         .catch(error => alert("Произошла ошибка: " + error.message));
     });
 }

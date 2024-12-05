@@ -6,20 +6,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{active_page.ru}}</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/navigate.css') }}">
+    {% block link %} 
+        
+    {% endblock link %}
 </head>
 <body>
-    <div class="container">
-        <nav class="menu">
-            {% for page in pages %}
-                {% if page.name != 'base' %}
-                <a href="{{ url_for('main.' + page.name) }}" {% if page.name == active_page.name %} class="active_navigate_link" {% else %} class="navigate_link" {% endif %}>
-                    {{ page.ru }}
-                </a>
-                {% endif %}
-            {% endfor %}
-        </nav>
-        
-    </div>
+    {% include "navigate.html" %}
+    <main>
+        {% block content %} 
+            Главная страница   
+        {% endblock content %}
+    </main>
 </body>
-</html>     
+</html>

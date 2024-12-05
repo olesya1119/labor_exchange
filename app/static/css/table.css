@@ -1,0 +1,56 @@
+button {
+    padding: 10px 20px;
+    background-color: #CCC5B9;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    box-shadow: 0 -3px 4px rgba(0, 0, 0, 0.4);
+    text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.25);
+}
+
+button:hover {
+    background-color: #E98964;
+}
+
+table {
+    width: auto; /* Устанавливает ширину таблицы по содержимому */
+    max-width: 80%; /* Максимальная ширина таблицы (если данные длинные) */
+    margin: 0 auto; /* Центрирование по горизонтали */
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+thead {
+    background-color: #3e3e3e;
+    color: white;
+}
+
+thead th {
+    padding: 10px;
+    text-align: left;
+}
+
+tbody tr {
+    background-color: #CCC5B9;
+}
+
+tbody tr:nth-child(even) {
+    background-color: #E0DCD2;
+}
+
+td {
+    padding: 10px;
+}
+
+td input {
+    border: 1px solid #ccc;
+    padding: 5px;
+    border-radius: 5px;
+    width: 100%;
+}
+
+.editable:disabled {
+    border: none;
+    background: none;
+}

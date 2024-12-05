@@ -1,0 +1,33 @@
+/* Хранит основной стиль для текста и фона*/
+
+/* Добавляем новый шрифт*/
+@font-face { 
+    font-family: 'Anonymous_Pro';
+    src: url('../fonts/Anonymous_Pro/AnonymousPro-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+body {
+    font-family: Anonymous_Pro, sans-serif;
+    background-color: #f9f3e9;
+    color: #252422;
+    margin: 0;
+    padding: 0;
+}
+
+nav .container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+main .container {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Горизонтальное центрирование */
+    justify-content: center; /* Вертикальное центрирование */
+    height: 100vh; /* Высота контейнера на всю высоту окна */
+    margin: 0 auto; /* Убирает возможное смещение */
+    text-align: center;
+}

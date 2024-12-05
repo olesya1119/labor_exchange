@@ -1,0 +1,21 @@
+{% block navigate%}
+<div class="container">
+    <nav class="menu">
+        {% for page in pages %}
+            {% if page.name == 'help' %}
+                <div class="menu-item">
+                    <a href="#" class="navigate_link">Справка</a>
+                    <div class="submenu">
+                        <a href="#" class="navigate_link">Содержание</a>
+                        <a href="#" class="navigate_link">О программе</a>
+                    </div>
+                </div>
+            {% elif page.name != 'base' %}
+                <a href="{{ url_for('main.' + page.name) }}" {% if page.name == active_page.name %} class="active_navigate_link" {% else %} class="navigate_link" {% endif %}>
+                    {{ page.ru }}
+                </a>
+            {% endif %}
+        {% endfor %}
+    </nav>
+</div>
+{% endblock navigate%}

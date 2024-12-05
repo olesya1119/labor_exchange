@@ -1,43 +1,110 @@
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, request
+from app.repositories import ApplicantRepository
 
 app = Blueprint('main', __name__)
 
 pages = [
     {
         'name': 'base',
-        'ru': 'Главная страница'
+        'ru': 'Главная страница',
+        'have_submenu': False
     },
     {
         'name': 'applicants',
-        'ru': 'Соискатели'
+        'ru': 'Соискатели',
+        'have_submenu': False
     },
     {
         'name': 'employers',
-        'ru': 'Работодатели'
+        'ru': 'Работодатели',
+        'have_submenu': False
     },
     {
         'name': 'vacancies',
-        'ru': 'Вакансии'
+        'ru': 'Вакансии',
+        'have_submenu': False
     },
     {
         'name': 'archive',
-        'ru': 'Архив'
+        'ru': 'Архив',
+        'have_submenu': False
     },
     {
         'name': 'directories',
-        'ru': 'Справочники'
+        'ru': 'Справочники',
+        'have_submenu': True,
+        'submenu':
+            [
+                {
+                    'name': 'specializations',
+                    'ru': 'Специальности'
+                },
+                {
+                    'name': '',
+                    'ru': 'Учебные заведения'
+                },
+                {
+                    'name': 'Specializations',
+                    'ru': 'Уровни образования'
+                },
+                {
+                    'name': 'Specializations',
+                    'ru': 'Документы об образовании'
+                },
+                {
+                    'name': 'Specializations',
+                    'ru': 'Пособия'
+                },
+                {
+                    'name': 'Specializations',
+                    'ru': 'Требования к работнику'
+                },
+                {
+                    'name': 'Specializations',
+                    'ru': 'Сферы деятельности'
+                },
+                {
+                    'name': 'Specializations',
+                    'ru': 'Города'
+                },
+                {
+                    'name': 'Specializations',
+                    'ru': 'Улицы'
+                }
+            ]
     },
     {
         'name': 'documents',
-        'ru': 'Документы'
+        'ru': 'Документы',
+        'have_submenu': True,
+        'submenu':
+            [
+                {
+                    'name': 'Specializations',
+                    'ru': 'Экспорт в SCV'
+                }
+            ]
     },
     {
         'name': 'help',
-        'ru': 'Справка'
+        'ru': 'Справка',
+        'have_submenu': True,
+        'submenu':
+            [
+                {
+                    'name': '',
+                    'ru': 'Содержание'
+                },
+                {
+                    'name': '',
+                    'ru': 'О программе'
+                }
+            ]
     },
     {
         'name': 'various',
-        'ru': 'Разное'
+        'ru': 'Разное',
+        'have_submenu': True
     }
 ]
 
@@ -58,9 +125,15 @@ def base():
 
 @app.route("/applicants")
 def applicants():
+    # Получение количества записей
+    records_per_page = int(request.args.get('records_per_page', 10))
+    apl_rep = ApplicantRepository()
+    applicants_data = apl_rep.get_paginated(records_per_page, 0)
+    print(applicants_data)
     return render_template("applicants.html",
                            active_page=get_active_page('applicants'),
-                           pages=pages)
+                           pages=pages, applicants=applicants_data,
+                           records_per_page=records_per_page)
 
 
 @app.route("/employers")

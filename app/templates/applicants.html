@@ -3,57 +3,10 @@
 {% extends "base.html" %}
 
 {% block link %} 
-        <script>
-            function toggleEditMode() {
-                const table = document.getElementById('applicants-table');
-                const modeText = document.getElementById('mode-text');
-                const inputs = table.querySelectorAll('.editable');
-                const isEditMode = table.classList.toggle('edit-mode');
-
-                inputs.forEach(input => input.disabled = !isEditMode);
-                modeText.innerText = isEditMode ? 'Режим редактирования' : 'Режим просмотра';
-            }
-
-            function changeRecordsPerPage(select) {
-                const value = select.value;
-                window.location.href = `?records_per_page=${value}`;
-            }
-    </script>
+    <script src="{{ url_for('static', filename='js/table.js') }}"></script>
 {% endblock link %}
 
 {% block content %} 
     <h1>Список соискателей</h1>
-    <div class="controls">
-        <label for="records-per-page">Записей на странице:</label>
-        <select id="records-per-page" onchange="changeRecordsPerPage(this)">
-            <option value="5" {% if records_per_page == 5 %}selected{% endif %}>5</option>
-            <option value="10" {% if records_per_page == 10 %}selected{% endif %}>10</option>
-            <option value="15" {% if records_per_page == 15 %}selected{% endif %}>15</option>
-            <option value="20" {% if records_per_page == 20 %}selected{% endif %}>20</option>
-        </select>
-        <button onclick="toggleEditMode()">Переключить режим</button>
-        <span id="mode-text">Режим просмотра</span>
-    </div>
-    <table id="applicants-table" class="view-mode">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Имя</th>
-                <th>Фамилия</th>
-                <th>Email</th>
-                <th>Телефон</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for applicant in applicants %}
-            <tr>
-                <td>{{ applicant.0 }}</td>
-                <td><input class="editable" type="text" value="{{ applicant.1 }}" disabled></td>
-                <td><input class="editable" type="text" value="{{ applicant.2 }}" disabled></td>
-                <td><input class="editable" type="text" value="{{ applicant.3 }}" disabled></td>
-                <td><input class="editable" type="text" value="{{ applicant.4 }}" disabled></td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+    {% include "table.html" %}
 {% endblock content %}

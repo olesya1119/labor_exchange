@@ -1,7 +1,8 @@
-from flask import Blueprint, render_template, request
-from app.repositories import ApplicantRepository
+from flask import Blueprint, render_template, request,  jsonify
+from app.services.applicant import ApplicantService
 
 app = Blueprint('main', __name__)
+
 
 pages = [
     {
@@ -123,17 +124,52 @@ def base():
                            pages=pages)
 
 
-@app.route("/applicants")
+@app.route("/applicants", methods=["GET"])
 def applicants():
-    # Получение количества записей
     records_per_page = int(request.args.get('records_per_page', 10))
-    apl_rep = ApplicantRepository()
-    applicants_data = apl_rep.get_paginated(records_per_page, 0)
-    print(applicants_data)
-    return render_template("applicants.html",
-                           active_page=get_active_page('applicants'),
-                           pages=pages, applicants=applicants_data,
-                           records_per_page=records_per_page)
+    page = int(request.args.get('page', 1))
+    offset = (page - 1) * records_per_page
+    # Получение количества записей
+
+    # Общая информация
+    apl_rep = ApplicantService(records_per_page, offset)
+    total_records = apl_rep.get_count()
+    total_pages = (total_records + records_per_page - 1) // records_per_page
+
+    return render_template(
+        "applicants.html",
+        active_page=get_active_page('applicants'),
+        pages=pages,
+        data=apl_rep.table,
+        head=apl_rep.table_fields,
+        records_per_page=records_per_page,
+        current_page=page,
+        total_pages=total_pages
+    )
+
+
+@app.route("/applicants/save", methods=["POST"])
+def save_applicant():
+    data = request.json
+
+    '''
+    # Валидация данных
+    if not data.get("name"):
+        errors.append("Имя не должно быть пустым")
+    if not data.get("email") or "@" not in data["email"]:
+        errors.append("Некорректный email")
+    if errors:
+        return jsonify({"success": False, "errors": errors}), 400
+    '''
+    apl_rep = ApplicantService()
+    # Сохранение данных
+    apl_rep.update_table(data)
+    try:
+        apl_rep.update_table(data)
+        return jsonify({"success": True})
+    except Exception as e:
+        print(e)
+        return jsonify({"success": False, "errors": [str(e)]}), 500
 
 
 @app.route("/employers")

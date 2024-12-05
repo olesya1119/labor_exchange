@@ -54,3 +54,14 @@ td input {
     border: none;
     background: none;
 }
+
+.pagination a {
+    margin: 0 5px;
+    text-decoration: none;
+    color: blue;
+}
+
+.pagination a.active {
+    font-weight: bold;
+    text-decoration: underline;
+}

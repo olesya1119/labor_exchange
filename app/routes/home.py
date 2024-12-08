@@ -2,7 +2,8 @@ from flask import Blueprint, render_template
 from .pages_controller import get_active_page, get_all_pages
 
 
-home_app = Blueprint('home', __name__, url_prefix='/')
+home_app = Blueprint('home', __name__, url_prefix='/',
+                     template_folder='templates/home')
 
 
 # TODO: сделать отдельную страницу главной страницы.
@@ -12,11 +13,12 @@ home_app = Blueprint('home', __name__, url_prefix='/')
 def render_home():
     '''Рендер главной страницы'''
 
-    return render_template("base.html",
+    return render_template("home.html",
                            active_page=get_active_page('home.home'),
                            pages=get_all_pages())
 
 
+'''
 @home_app.route("/directories")
 def directories():
     return render_template("directories.html",
@@ -43,3 +45,4 @@ def various():
     return render_template("various.html",
                            active_page=get_active_page('various'),
                            pages=get_all_pages())
+'''

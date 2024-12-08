@@ -18,10 +18,11 @@ class TableRoutes():
     которые выводят таблицы, имеют возможность удаления/добавления/поиска
     '''
 
-    def __init__(self, service: BaseService, app_name: str, url_prefix: str
-                 ) -> None:
+    def __init__(self, service: BaseService, app_name: str, url_prefix: str,
+                 template_folder: str) -> None:
         self.blueprint = Blueprint(app_name, __name__,
-                                   url_prefix=url_prefix)
+                                   url_prefix=url_prefix,
+                                   template_folder=template_folder)
         self.service = service
         self.app_name = app_name
         self._register_routes()
@@ -57,7 +58,6 @@ class TableRoutes():
                 self.service.delete_entry(id)
                 return jsonify({"success": True})
             except Exception as e:
-                raise e
                 return jsonify({"success": False, "error": str(e)}), 500
 
         @self.blueprint.route("/save", methods=["POST"])
@@ -68,7 +68,6 @@ class TableRoutes():
                 self.service.update_table(data)
                 return jsonify({"success": True})
             except Exception as e:
-                raise e
                 return jsonify({"success": False, "errors": [str(e)]}), 500
 
     def get_blueprint(self):
@@ -77,19 +76,23 @@ class TableRoutes():
 
 class ApplicantsRoutes(TableRoutes):
     def __init__(self):
-        super().__init__(ApplicantService(), 'applicants', '/applicants')
+        super().__init__(ApplicantService(), 'applicants', '/applicants',
+                         'templates/applicants')
 
 
 class VacanciesRoutes(TableRoutes):
     def __init__(self):
-        super().__init__(VacancyService(), 'vacancies', '/vacancies')
+        super().__init__(VacancyService(), 'vacancies', '/vacancies',
+                         'templates/vacancies')
 
 
 class EmployersRoutes(TableRoutes):
     def __init__(self):
-        super().__init__(EmployerService(), 'employers', '/employers')
+        super().__init__(EmployerService(), 'employers', '/employers',
+                         'employers/vacancies')
 
 
 class ArchiveRoutes(TableRoutes):
     def __init__(self):
-        super().__init__(ArchiveService(), 'archive', '/archive')
+        super().__init__(ArchiveService(), 'archive', '/archive',
+                         'archive/vacancies')

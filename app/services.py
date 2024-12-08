@@ -1,7 +1,4 @@
-from typing import Type
-from app.repositories import BaseRepository
-from app.models import BaseModel
-from app.repositories import ApplicantRepository
+from app.repositories import ApplicantRepository, BaseRepository
 from app.models import Applicant
 from app.repositories import AgreementRepository
 from app.models import Agreement
@@ -48,24 +45,26 @@ from app.models import VacancyFieldOfActivity
 class BaseService:
 
     table_fields: tuple = ('id', )
-    __Model: Type[BaseModel] = BaseModel
-    __repository: BaseRepository = BaseRepository()
 
-    def __init__(self, limit=10, offset=0) -> None:
+    def __init__(self, repository: BaseRepository, Model, limit=10, offset=0
+                 ) -> None:
         self.limit = limit
         self.offset = offset
+        self.__repository = repository
+        self.__Model = Model
 
     def set_page(self, page: int) -> None:
         '''Установаить страницу'''
-        if page > self.get_count_pages():
-            self.offset = self.__repository.get_count() - self.limit
+        if page >= self.get_count_pages():
+            self.offset = self.__repository.get_count()[0][0] - self.limit
         else:
-            self.offset = (self.limit * page) - 1
+            self.offset = self.limit * (page - 1)
 
-    def update_limit(self, limit: int) -> None:
-        '''Обновить значение переменных limit и offset'''
-
+    def set_limit(self, limit: int) -> None:
+        '''Обновить значение переменной limit'''
         self.limit = limit
+
+    def reset_offset(self) -> None:
         self.offset = 0
 
     def update_table(self, data: dict) -> None:
@@ -95,8 +94,12 @@ class BaseService:
         '''Получить данные таблицы'''
         return self.__repository.get_paginated(self.limit, self.offset)
 
+    def delete_entry(self, id: int):
+        '''Получить данные из таблицы'''
+        self.__repository.delete_by_id(id)
 
-class ApplicantService:
+
+class ApplicantService(BaseService):
     table_fields: tuple = ('id', 'Фамилия', 'Имя', 'Отчетсво', 'Возраст',
                            'Номер паспорта', 'Дата выдачи паспорта',
                            'Кем выдан паспорт',
@@ -107,144 +110,154 @@ class ApplicantService:
                            'Данные документа об образовании',
                            'Дата потсановки на учет', 'id-Пособие')
 
-    __Model = Applicant
-    __repository = ApplicantRepository()
+    def __init__(self, limit=10, offset=0):
+        super().__init__(ApplicantRepository(), Applicant, limit, offset)
 
 
-class AgreementService:
+class AgreementService(BaseService):
     table_fields: tuple = ('id',
                            'id-Соискатель',
                            'id-Вакансия',
                            'Дата подписания')
 
-    __Model = Agreement
-    __repository = AgreementRepository()
+    def __init__(self, limit=10, offset=0):
+        super().__init__(AgreementRepository(), Agreement, limit, offset, )
 
 
-class SpecializationApplicantService:
+class SpecializationApplicantService(BaseService):
     table_fields: tuple = ('id',
                            'id-Соискатель',
                            'id-Специальность',
                            'Стаж работы'
                            )
 
-    __Model = SpecializationApplicant
-    __repository = SpecializationApplicantRepository()
+    def __init__(self, limit=10, offset=0):
+        super().__init__(SpecializationApplicantRepository(),
+                         SpecializationApplicant, limit, offset)
 
 
-class EducationalInstitutionApplicantService:
+class EducationalInstitutionApplicantService(BaseService):
     table_fields: tuple = ('id',
                            'id-Соискатель',
                            'id-Учебное заведение'
                            )
 
-    __Model = EducationalInstitutionApplicant
-    __repository = EducationalInstitutionApplicantRepository()
+    def __init__(self, limit=10, offset=0):
+        super().__init__(EducationalInstitutionApplicantRepository(),
+                         EducationalInstitutionApplicant, limit, offset)
 
 
-class ArchiveService:
+class ArchiveService(BaseService):
     table_fields: tuple = ('id',
                            'id-Соискатель',
                            'Дата перевода в архив',
                            'Лицо, выполнившее операцию'
                            )
 
-    __Model = Archive
-    __repository = ArchiveRepository()
+    def __init__(self, limit=10, offset=0):
+        super().__init__(ArchiveRepository(), Archive, limit, offset)
 
 
-class EducationalInstitutionService:
+class EducationalInstitutionService(BaseService):
     table_fields: tuple = ('id', 'Название')
 
-    __Model = EducationalInstitution
-    __repository = EducationalInstitutionRepository()
+    def __init__(self, limit=10, offset=0):
+        super().__init__(EducationalInstitutionRepository(),
+                         EducationalInstitution, limit, offset)
 
 
-class EducationLevelService:
+class EducationLevelService(BaseService):
     table_fields: tuple = ('id', 'Название')
 
-    __Model = EducationLevel
-    __repository = EducationLevelRepository()
+    def __init__(self, limit=10, offset=0):
+        super().__init__(EducationLevelRepository(), EducationLevel,
+                         limit, offset)
 
 
-class EducationDocumentService:
+class EducationDocumentService(BaseService):
     table_fields: tuple = ('id', 'Название')
 
-    __Model = EducationDocument
-    __repository = EducationDocumentRepository()
+    def __init__(self, limit=10, offset=0):
+        super().__init__(EducationDocumentRepository(), EducationDocument,
+                         limit, offset)
 
 
-class EmployerService:
+class EmployerService(BaseService):
     table_fields: tuple = ('id', 'Название', 'id-Город',
                            'id-Улицы', 'Номер дома',
                            'Номер телефона')
 
-    __Model = Employer
-    __repository = EmployerRepository()
+    def __init__(self, limit=10, offset=0):
+        super().__init__(EmployerRepository(), Employer, limit, offset)
 
 
-class CityService:
+class CityService(BaseService):
     table_fields: tuple = ('id', 'Название')
 
-    __Model = City
-    __repository = CityRepository()
+    def __init__(self, limit=10, offset=0):
+        super().__init__(CityRepository(), City, limit, offset)
 
 
-class StreetService:
+class StreetService(BaseService):
     table_fields: tuple = ('id', 'Название')
 
-    __Model = Street
-    __repository = StreetRepository()
+    def __init__(self, limit=10, offset=0):
+        super().__init__(StreetRepository(), Street, limit, offset)
 
 
-class SpecializationService:
+class SpecializationService(BaseService):
     table_fields: tuple = ('id', 'Название')
 
-    __Model = Specialization
-    __repository = SpecializationRepository()
+    def __init__(self, limit=10, offset=0):
+        super().__init__(SpecializationRepository(), Specialization,
+                         limit, offset)
 
 
-class AllowanceService:
+class AllowanceService(BaseService):
     table_fields: tuple = ('id', 'Размер пособия')
 
-    __Model = Allowance
-    __repository = AllowanceRepository()
+    def __init__(self, limit=10, offset=0):
+        super().__init__(AllowanceRepository(), Allowance, limit, offset)
 
 
-class ApplicantRequirementsService:
+class ApplicantRequirementsService(BaseService):
     table_fields: tuple = ('id', 'Название')
 
-    __Model = ApplicantRequirements
-    __repository = ApplicantRequirementsRepository()
+    def __init__(self, limit=10, offset=0):
+        super().__init__(ApplicantRequirementsRepository(),
+                         ApplicantRequirements, limit, offset)
 
 
-class FieldOfActivityService:
+class FieldOfActivityService(BaseService):
     table_fields: tuple = ('id', 'Название')
 
-    __Model = FieldOfActivity
-    __repository = FieldOfActivityRepository()
+    def __init__(self, limit=10, offset=0):
+        super().__init__(FieldOfActivityRepository(), FieldOfActivity,
+                         limit, offset)
 
 
-class VacancyService:
+class VacancyService(BaseService):
     table_fields: tuple = ('id',
                            'Название должности',
                            'Нижняя граница зарплаты',
                            'Верхняя граница зарплаты',
                            'id-Работодатель')
 
-    __Model = Vacancy
-    __repository = VacancyRepository()
+    def __init__(self, limit=10, offset=0):
+        super().__init__(VacancyRepository(), Vacancy, limit, offset)
 
 
-class VacancyApplicantRequirementsService:
+class VacancyApplicantRequirementsService(BaseService):
     table_fields: tuple = ('id', 'id-Вакансия', 'id-Требования к работнику')
 
-    __Model = VacancyApplicantRequirements
-    __repository = VacancyApplicantRequirementsRepository()
+    def __init__(self, limit=10, offset=0):
+        super().__init__(VacancyApplicantRequirementsRepository(),
+                         VacancyApplicantRequirements, limit, offset)
 
 
-class VacancyFieldOfActivityService:
+class VacancyFieldOfActivityService(BaseService):
     table_fields: tuple = ('id', 'id-Вакансия', 'id-Сфера деятельности')
 
-    __Model = VacancyFieldOfActivity
-    __repository = VacancyFieldOfActivityRepository()
+    def __init__(self, limit=10, offset=0):
+        super().__init__(VacancyFieldOfActivityRepository(),
+                         VacancyFieldOfActivity, limit, offset)

@@ -15,6 +15,7 @@ function changeRecordsPerPage(select) {
 
 function saveData() {
     const rows = document.querySelectorAll('#table tbody tr');
+    const basePath = window.location.pathname;
     rows.forEach(row => {
         const inputs = row.querySelectorAll('.editable');
         const data = {
@@ -27,10 +28,10 @@ function saveData() {
         });
         
 
-        fetch('/applicants/save', {
+        fetch(`${basePath}/save`, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': `${basePath}/json`
             },
             body: JSON.stringify(data)
         })
@@ -46,10 +47,11 @@ function saveData() {
 }
 
 document.querySelector('#table').addEventListener('click', function(event) {
+    const basePath = window.location.pathname;
     if (event.target.classList.contains('delete-row')) {
         const row = event.target.closest('tr');
         const id = row.cells[1].innerText.trim(); // Предполагаем, что ID в 1-й ячейке.
-        fetch(`/applicants/delete/${id}`, { method: 'DELETE' })
+        fetch(`${basePath}/delete/${id}`, { method: 'DELETE' })
             .then(response => {
                 if (response.ok) {
                     row.remove();

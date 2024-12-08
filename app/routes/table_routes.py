@@ -23,6 +23,7 @@ class TableRoutes():
         self.blueprint = Blueprint(app_name, __name__,
                                    url_prefix=url_prefix)
         self.service = service
+        self.app_name = app_name
         self._register_routes()
 
     def _register_routes(self):
@@ -34,15 +35,14 @@ class TableRoutes():
             records_per_page = int(request.args.get('records_per_page', 10))
             # Номер страницы
             page = int(request.args.get('page', 1))
-
             # Обновляем класс - сервис
-            self.service.update_limit(records_per_page)
+            self.service.set_limit(records_per_page)
             self.service.set_page(page)
 
             return render_template(
-                "applicants.html",
-                active_page=get_active_page('applicants'),
-                pages=get_all_pages,
+                f"{self.app_name}.html",
+                active_page=get_active_page(f"{self.app_name}.render_table"),
+                pages=get_all_pages(),
                 data=self.service.get_table(),
                 head=self.service.table_fields,
                 records_per_page=records_per_page,
@@ -54,7 +54,7 @@ class TableRoutes():
         def delete_entry(id):
             '''Удаление записи из таблицы'''
             try:
-                self.service.delete_by_id(id)
+                self.service.delete_entry(id)
                 return jsonify({"success": True})
             except Exception as e:
                 return jsonify({"success": False, "error": str(e)}), 500
@@ -64,7 +64,9 @@ class TableRoutes():
             '''Сохранение записи в таблице'''
             data = request.json
             try:
+                print(self.service)
                 self.service.update_table(data)
+
                 return jsonify({"success": True})
             except Exception as e:
                 return jsonify({"success": False, "errors": [str(e)]}), 500
@@ -80,7 +82,7 @@ class ApplicantsRoutes(TableRoutes):
 
 class VacanciesRoutes(TableRoutes):
     def __init__(self):
-        super().__init__(VacancyService, 'vacancies', '/vacancies')
+        super().__init__(VacancyService(), 'vacancies', '/vacancies')
 
 
 class EmployersRoutes(TableRoutes):

@@ -2,68 +2,73 @@ PAGES = [
     {
         'name': 'home.render_home',
         'ru': 'Главная страница',
-        'have_submenu': False
+        'have_submenu': False,
+        'submenu': []
     },
     {
         'name': 'applicants.render_table',
         'ru': 'Соискатели',
-        'have_submenu': False
+        'have_submenu': False,
+        'submenu': []
     },
     {
         'name': 'employers.render_table',
         'ru': 'Работодатели',
-        'have_submenu': False
+        'have_submenu': False,
+        'submenu': []
     },
     {
         'name': 'vacancies.render_table',
         'ru': 'Вакансии',
-        'have_submenu': False
+        'have_submenu': False,
+        'submenu': []
     },
     {
         'name': 'archive.render_table',
         'ru': 'Архив',
-        'have_submenu': False
+        'have_submenu': False,
+        'submenu': []
     },
     {
-        'name': 'home.directories',
+        'name': 'directories.render_directories',
         'ru': 'Справочники',
         'have_submenu': True,
         'submenu':
             [
                 {
-                    'name': 'specializations',
+                    'name': 'specializations.render_table',
                     'ru': 'Специальности'
                 },
                 {
-                    'name': '',
+                    'name': 'educational_institutions.render_table',
                     'ru': 'Учебные заведения'
                 },
                 {
-                    'name': 'Specializations',
+                    'name': 'education_levels.render_table',
                     'ru': 'Уровни образования'
                 },
                 {
-                    'name': 'Specializations',
+                    'name': 'education_documents.render_table',
                     'ru': 'Документы об образовании'
                 },
                 {
-                    'name': 'Specializations',
+                    'name': 'allowances.render_table',
                     'ru': 'Пособия'
                 },
                 {
-                    'name': 'Specializations',
+                    'name': 'applicant_requirements.render_table',
                     'ru': 'Требования к работнику'
                 },
                 {
-                    'name': 'Specializations',
+                    'name': 'fields_of_activity.render_table',
                     'ru': 'Сферы деятельности'
                 },
                 {
-                    'name': 'Specializations',
+                    'name': 'cities.render_table',
                     'ru': 'Города'
                 },
                 {
-                    'name': 'Specializations',
+                    'name': 'streets.render_table',
                     'ru': 'Улицы'
                 }
             ]
@@ -71,35 +76,20 @@ PAGES = [
     {
         'name': 'home.documents',
         'ru': 'Документы',
-        'have_submenu': True,
-        'submenu':
-            [
-                {
-                    'name': 'Specializations',
-                    'ru': 'Экспорт в SCV'
-                }
-            ]
+        'have_submenu': False,
+        'submenu': []
     },
     {
         'name': 'home.help',
         'ru': 'Справка',
-        'have_submenu': True,
-        'submenu':
-            [
-                {
-                    'name': '',
-                    'ru': 'Содержание'
-                },
-                {
-                    'name': '',
-                    'ru': 'О программе'
-                }
-            ]
+        'have_submenu': False,
+        'submenu': []
     },
     {
         'name': 'home.various',
         'ru': 'Разное',
-        'have_submenu': True
+        'have_submenu': False,
+        'submenu': []
     }
 ]
 
@@ -125,6 +115,11 @@ def get_active_page(name: str) -> dict:
     for page in PAGES:
         if page['name'] == name:
             return page
+    for page in PAGES:
+        if page['have_submenu']:
+            for subpage in page['submenu']:
+                if subpage['name'] == name:
+                    return subpage
     return PAGES[0]
 
 

@@ -21,10 +21,10 @@ class TableRoutes():
     def __init__(self, service: BaseService, app_name: str, url_prefix: str,
                  template_folder: str) -> None:
         self.blueprint = Blueprint(app_name, __name__,
-                                   url_prefix=url_prefix,
-                                   template_folder=template_folder)
+                                   url_prefix=url_prefix)
         self.service = service
         self.app_name = app_name
+        self.template_folder = template_folder
         self._register_routes()
 
     def _register_routes(self):
@@ -41,7 +41,7 @@ class TableRoutes():
             self.service.set_page(page)
 
             return render_template(
-                f"{self.app_name}.html",
+                f"{self.template_folder}/{self.app_name}.html",
                 active_page=get_active_page(f"{self.app_name}.render_table"),
                 pages=get_all_pages(),
                 data=self.service.get_table(),
@@ -77,22 +77,22 @@ class TableRoutes():
 class ApplicantsRoutes(TableRoutes):
     def __init__(self):
         super().__init__(ApplicantService(), 'applicants', '/applicants',
-                         'templates/applicants')
+                         'applicants')
 
 
 class VacanciesRoutes(TableRoutes):
     def __init__(self):
         super().__init__(VacancyService(), 'vacancies', '/vacancies',
-                         'templates/vacancies')
+                         'vacancies')
 
 
 class EmployersRoutes(TableRoutes):
     def __init__(self):
         super().__init__(EmployerService(), 'employers', '/employers',
-                         'employers/vacancies')
+                         'employers')
 
 
 class ArchiveRoutes(TableRoutes):
     def __init__(self):
         super().__init__(ArchiveService(), 'archive', '/archive',
-                         'archive/vacancies')
+                         'archive')

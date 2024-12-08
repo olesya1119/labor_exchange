@@ -6,9 +6,11 @@
                 <div class="menu-item">
                     <a href="#" class="navigate_link">{{ page.ru }}</a>
                     <div class="submenu">
-                        <a href="{{ url_for(page.submenu.name) }}" {% if page.submenu.name == active_page.submenu.name %} class="active_navigate_link" {% else %} class="navigate_link" {% endif %}>
-                            {{ page.submenu }}
+                        {% for subpage in page.submenu %}
+                        <a href="{{ url_for(subpage.name) }}" {% if subpage.name == active_page.name %} class="active_navigate_link" {% else %} class="navigate_link" {% endif %}>
+                            {{ subpage.ru }}
                         </a>
+                        {% endfor %}
                     </div>
                 </div>
             {% elif page.name != pages.0.name %}

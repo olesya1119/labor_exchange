@@ -8,3 +8,4 @@ from .location import CityRepository, StreetRepository
 from .specialization import SpecializationRepository, AllowanceRepository, ApplicantRequirementsRepository, FieldOfActivityRepository
 from .vacancy import VacancyRepository, VacancyApplicantRequirementsRepository, VacancyFieldOfActivityRepository
 from .employer import EmployerRepository
+from .base_repository import BaseRepository

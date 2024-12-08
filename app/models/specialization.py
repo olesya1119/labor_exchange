@@ -14,20 +14,20 @@ class Allowance(BaseModel):
 
     def __init__(self, id: int, amount: float) -> None:
         super().__init__(id)
-        self.amount = amount
+        self.amount = float(amount)
 
 
 class ApplicantRequirements(BaseModel):
     '''Класс, описывающий требования к работнику'''
 
-    def __init__(self, id: int, amount: float) -> None:
+    def __init__(self, id: int, name: str) -> None:
         super().__init__(id)
-        self.amount = amount
+        self.name = name
 
 
 class FieldOfActivity(BaseModel):
     '''Класс, описывающий сферы Деятельности'''
 
-    def __init__(self, id: int, amount: float) -> None:
+    def __init__(self, id: int, name: str) -> None:
         super().__init__(id)
-        self.amount = amount
+        self.name = name

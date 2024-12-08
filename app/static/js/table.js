@@ -18,7 +18,7 @@ function saveData() {
     rows.forEach(row => {
         const inputs = row.querySelectorAll('.editable');
         const data = {
-            id: row.cells[0].innerText.trim(), // Собираем ID из первой ячейки
+            id: row.cells[1].innerText.trim(), // Собираем ID из первой ячейки
         };
 
         // Записываем все данные из input-полей в объект
@@ -44,3 +44,46 @@ function saveData() {
         .catch(error => alert("Произошла ошибка: " + error.message));
     });
 }
+
+document.querySelector('#table').addEventListener('click', function(event) {
+    if (event.target.classList.contains('delete-row')) {
+        const row = event.target.closest('tr');
+        const id = row.cells[1].innerText.trim(); // Предполагаем, что ID в 1-й ячейке.
+        fetch(`/applicants/delete/${id}`, { method: 'DELETE' })
+            .then(response => {
+                if (response.ok) {
+                    row.remove();
+                } else {
+                    alert('Ошибка при удалении строки');
+                }
+            })
+            .catch(error => console.error('Ошибка:', error));
+    }
+});
+
+document.getElementById('add-row').addEventListener('click', function () {
+    const tableBody = document.querySelector('#table tbody');
+    const tableHead = document.querySelector('#table thead tr');
+
+    // Создаем новую строку
+    const newRow = document.createElement('tr');
+
+    // Добавляем кнопку удаления в первую ячейку
+    const deleteCell = document.createElement('td');
+    const idCell = document.createElement('td');
+    deleteCell.innerHTML = '<button class="delete-row">Удалить</button>';
+    newRow.appendChild(deleteCell);
+    newRow.appendChild(idCell);
+    
+
+    // Создаем ячейки с input на основе заголовков таблицы
+    Array.from(tableHead.cells).slice(2).forEach(() => {
+        const cell = document.createElement('td');
+        cell.innerHTML = `<input type="text" class="editable" value="">`;
+        newRow.appendChild(cell);
+    });
+
+    // Добавляем строку в таблицу
+    tableBody.appendChild(newRow);
+});
+

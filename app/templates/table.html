@@ -23,6 +23,7 @@
 <table id="table" class="view-mode">
     <thead>
         <tr>
+            <th></th>
             {% for title in head %}
             <th>{{ title }}</th>
             {% endfor %}
@@ -31,6 +32,7 @@
     <tbody>
         {% for entry in data %}
         <tr>
+            <td><button class="delete-row">Удалить</button></td>
             {% for i in range(entry|length) %}
                 {% if i == 0 %}
                     <td>{{ entry.0 }}</td>
@@ -42,5 +44,5 @@
         {% endfor %}
     </tbody>
 </table>
-
+<button id="add-row">Добавить строку</button>
 <button onclick="saveData()">Сохранить изменения</button>

@@ -5,7 +5,8 @@ from datetime import date, datetime
 class Applicant(BaseModel):
     '''Класс, описывающий безработного(соискателя)'''
 
-    def __init__(self, id: int | str, last_name: str | str, first_name: str,
+    def __init__(self, id: int | str | None, last_name: str | str,
+                 first_name: str,
                  middle_name: str | None, age: int | str,
                  passport_number: int | str,
                  passport_issue_date: date | str,  passport_issued_by: str,
@@ -16,7 +17,7 @@ class Applicant(BaseModel):
                  education_document_details: str,
                  registration_date: date | str,
                  allowance_id: int | None | str) -> None:
-        super().__init__(int(id))
+        super().__init__(id)
         self.last_name = last_name
         self.first_name = first_name
         self.middle_name = middle_name
@@ -50,45 +51,36 @@ class Applicant(BaseModel):
         else:
             self.allowance_id = int(allowance_id)
 
-    def get_values(self) -> dict:
-        return {
-            'id': self.id,
-            'last_name': self.last_name,
-            'first_name': self.first_name,
-            'middle_name': self.middle_name,
-            'age': self.age,
-            'passport_number': self.passport_number,
-            'passport_issue_date': self.passport_issue_date,
-            'passport_issued_by': self.passport_issued_by,
-            'city_id': self.city_id,
-            'street_id': self.street_id,
-            'house_number': self.house_number,
-            'phone_number': self.phone_number,
-            'photo': self.photo,
-            'education_level_id': self.education_level_id,
-            'education_document_id': self.education_document_id,
-            'education_document_details': self.education_document_details
-            }
-
 
 class SpecializationApplicant(BaseModel):
-    '''Класс, описывающий cпециальности соискателей'''
-
-    def __init__(self, id: int, applicant_id: int,
-                 specialization_id: int, work_experience: float
-                 ) -> None:
+    '''Класс, описывающий специальности соискателей'''
+    def __init__(
+        self,
+        id: int | None,
+        applicant_id: int | str,
+        specialization_id: int | str,
+        work_experience: float | str
+    ):
         super().__init__(id)
-        self.applicant_id = applicant_id
-        self.specialization_id = specialization_id
-        self.work_experience = work_experience
+
+        self.applicant_id = int(applicant_id)
+        self.specialization_id = int(specialization_id)
+
+        if isinstance(work_experience, str):
+            self.work_experience = float(work_experience)
+        else:
+            self.work_experience = work_experience
 
 
 class EducationalInstitutionApplicant(BaseModel):
     '''Класс, описывающий учебные заведения соискателей'''
-
-    def __init__(self, id: int, applicant_id: int,
-                 educational_institution_id: int
-                 ) -> None:
+    def __init__(
+        self,
+        id: int | None,
+        applicant_id: int | str,
+        educational_institution_id: int | str
+    ):
         super().__init__(id)
-        self.applicant_id = applicant_id
-        self.educational_institution_id = educational_institution_id
+
+        self.applicant_id = int(applicant_id)
+        self.educational_institution_id = int(educational_institution_id)

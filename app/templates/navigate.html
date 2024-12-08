@@ -2,7 +2,7 @@
 <div class="container">
     <nav class="menu">
         {% for page in pages %}
-            {% if page.name == 'help' %}
+            {% if page.name == 'home.help' %}
                 <div class="menu-item">
                     <a href="#" class="navigate_link">Справка</a>
                     <div class="submenu">
@@ -10,8 +10,8 @@
                         <a href="#" class="navigate_link">О программе</a>
                     </div>
                 </div>
-            {% elif page.name != 'base' %}
-                <a href="{{ url_for('main.' + page.name) }}" {% if page.name == active_page.name %} class="active_navigate_link" {% else %} class="navigate_link" {% endif %}>
+            {% elif page.name != pages.0.name %}
+                <a href="{{ url_for(page.name) }}" {% if page.name == active_page.name %} class="active_navigate_link" {% else %} class="navigate_link" {% endif %}>
                     {{ page.ru }}
                 </a>
             {% endif %}

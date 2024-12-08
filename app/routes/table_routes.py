@@ -57,6 +57,7 @@ class TableRoutes():
                 self.service.delete_entry(id)
                 return jsonify({"success": True})
             except Exception as e:
+                raise e
                 return jsonify({"success": False, "error": str(e)}), 500
 
         @self.blueprint.route("/save", methods=["POST"])
@@ -64,11 +65,10 @@ class TableRoutes():
             '''Сохранение записи в таблице'''
             data = request.json
             try:
-                print(self.service)
                 self.service.update_table(data)
-
                 return jsonify({"success": True})
             except Exception as e:
+                raise e
                 return jsonify({"success": False, "errors": [str(e)]}), 500
 
     def get_blueprint(self):

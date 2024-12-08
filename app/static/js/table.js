@@ -28,10 +28,10 @@ function saveData() {
         });
         
 
-        fetch(`${basePath}/save`, {
+        fetch(`${basePath.replace(/\/$/, '')}/save`, {
             method: 'POST',
             headers: {
-                'Content-Type': `${basePath}/json`
+                'Content-Type': `application/json`
             },
             body: JSON.stringify(data)
         })
@@ -51,7 +51,7 @@ document.querySelector('#table').addEventListener('click', function(event) {
     if (event.target.classList.contains('delete-row')) {
         const row = event.target.closest('tr');
         const id = row.cells[1].innerText.trim(); // Предполагаем, что ID в 1-й ячейке.
-        fetch(`${basePath}/delete/${id}`, { method: 'DELETE' })
+        fetch(`${basePath.replace(/\/$/, '')}/delete/${id}`, { method: 'DELETE' })
             .then(response => {
                 if (response.ok) {
                     row.remove();

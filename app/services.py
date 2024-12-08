@@ -59,6 +59,8 @@ class BaseService:
             self.offset = self.__repository.get_count()[0][0] - self.limit
         else:
             self.offset = self.limit * (page - 1)
+        if self.offset < 0:
+            self.offset = 0
 
     def set_limit(self, limit: int) -> None:
         '''Обновить значение переменной limit'''
@@ -76,7 +78,7 @@ class BaseService:
         if model.id is None:
             self.__repository.add(model)
         else:
-            self.__repository.update(model.id, model.to_dict())
+            self.__repository.update(model)
 
     def get_count_pages(self) -> int:
         '''Получить общее количество страниц'''

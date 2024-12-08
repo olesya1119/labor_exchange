@@ -11,6 +11,8 @@ class BaseRepository():
     def execute_query(func):
         def wrapper(*args, **kwargs):
             cursor = get_db_connection().cursor()
+            print(*args, **kwargs)
+            print(func(*args, **kwargs))
             query, values = func(*args, **kwargs)
             try:
                 cursor.execute(query, values)
@@ -61,10 +63,10 @@ class BaseRepository():
         return '', tuple()
 
     @fetch_results
-    def get_by_id(self, id: int) -> Tuple[str, int]:
+    def get_by_id(self, id: int) -> Tuple[str, tuple]:
         '''Получить запись по id'''
         return (f'''SELECT * FROM {self.table_name} ORDER BY '''
-                f'''{self.table_name}.id WHERE id = %s''', id)
+                f'''{self.table_name}.id WHERE id = %s''', (id, ))
 
     @fetch_results
     def get_paginated(self, limit: int, offset: int) -> Tuple[str, tuple]:
@@ -75,9 +77,9 @@ class BaseRepository():
             (limit, offset))
 
     @execute_query
-    def delete_by_id(self, id: int) -> Tuple[str, int]:
+    def delete_by_id(self, id: int) -> Tuple[str, tuple]:
         '''Удалить запись по id'''
-        return f'''DELETE * FROM {self.table_name} WHERE id = %s''', id
+        return (f'''DELETE FROM {self.table_name} WHERE id = %s''', (id, ))
 
     @fetch_results_without_args
     def get_count(self) -> str:
@@ -94,3 +96,6 @@ class BaseRepository():
     def get_last_id(self) -> str:
         '''Получить id последнего элемента'''
         return f'''SELECT MAX({self.table_name}.id) FROM {self.table_name}'''
+
+    # TODO: возможно это неправильно и стоит как-то иначе давать новые id
+    # Если удалить и добавить последний элемент то id тот же

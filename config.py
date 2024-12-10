@@ -5,7 +5,7 @@ class Config:
     """Базовые настройки приложения"""
     SECRET_KEY = os.getenv('SECRET_KEY', 'default_secret_key')
     DB_NAME = os.getenv('DB_NAME', 'labor_exchange')
-    DB_USER = os.getenv('DB_USER', 'admin')
+    DB_USER = os.getenv('DB_USER', 'postgres')
     DB_PASSWORD = os.getenv('DB_PASSWORD', 'postgres')
     DB_HOST = os.getenv('DB_HOST', 'localhost')
     DB_PORT = os.getenv('DB_PORT', 5432)

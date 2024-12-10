@@ -117,7 +117,7 @@ def get_active_page(name: str) -> dict:
             return page
     for page in PAGES:
         if page['have_submenu']:
-            for subpage in page['submenu']:
+            for subpage in page['submenu']:  # type: ignore
                 if subpage['name'] == name:
                     return subpage
     return PAGES[0]

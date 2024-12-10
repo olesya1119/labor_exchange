@@ -158,3 +158,29 @@ CREATE TABLE vacancy_field_of_activity(
     FOREIGN KEY (field_of_activity_id) REFERENCES field_of_activity (id)
 );
 
+CREATE TABLE menu(
+    id SERIAL PRIMARY KEY,
+    id_parent INTEGER NOT NULL,
+    name VARCHAR(50) NOT NULL,
+    function_name VARCHAR(50) NOT NULL,
+    menu_order INTEGER NOT NULL
+);
+
+CREATE TABLE app_user(
+    id SERIAL PRIMARY KEY,
+    login VARCHAR(50) UNIQUE NOT NULL,
+    password_hash VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE user_rights(
+    id SERIAL PRIMARY KEY,
+    id_app_user INTEGER NOT NULL,
+    id_menu INTEGER NOT NULL,
+    r BOOLEAN NOT NULL,
+    w BOOLEAN NOT NULL,
+    e BOOLEAN NOT NULL,
+    d BOOLEAN NOT NULL,
+    FOREIGN KEY (id_app_user) REFERENCES app_user(id),
+    FOREIGN KEY (id_menu) REFERENCES menu(id)
+);
+

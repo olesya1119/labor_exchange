@@ -1,9 +1,11 @@
 from flask import Flask
 from config import Config
+from flask_login import LoginManager  # type: ignore
 from .repositories.db import init_db
 from .routes import home_blueprint, ArchiveRoutes, ApplicantsRoutes
 from .routes import VacanciesRoutes, EmployersRoutes
 from .routes import directories_blueprints
+from .repositories import get_user_by_id
 
 
 def create_app():
@@ -27,6 +29,13 @@ def create_app():
     for bp in directories_blueprints:
         app.register_blueprint(bp)
 
-    print(app.jinja_loader.searchpath)
+    # Система авторизаций
+    login_manager = LoginManager()
+    login_manager.init_app(app)
+    login_manager.login_view = 'home.login'  # Укажите функцию обработки входа
+
+    @login_manager.user_loader
+    def load_user(user_id):
+        return get_user_by_id(user_id)
 
     return app

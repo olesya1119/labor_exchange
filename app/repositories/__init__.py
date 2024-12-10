@@ -9,3 +9,4 @@ from .specialization import SpecializationRepository, AllowanceRepository, Appli
 from .vacancy import VacancyRepository, VacancyApplicantRequirementsRepository, VacancyFieldOfActivityRepository
 from .employer import EmployerRepository
 from .base_repository import BaseRepository
+from .auth import get_user_by_id, add_user, get_user_id

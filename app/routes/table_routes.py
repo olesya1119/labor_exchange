@@ -2,6 +2,7 @@ from app.services import BaseService, ApplicantService
 from app.services import ArchiveService, VacancyService, EmployerService
 from flask import Blueprint, render_template, request, jsonify
 from .pages_controller import get_active_page, get_all_pages
+from flask_login import login_required  # type: ignore
 
 '''
 Файл описывает классы, которые отвечают за маршруты всех табличных страниц.
@@ -29,6 +30,7 @@ class TableRoutes():
 
     def _register_routes(self):
         @self.blueprint.route("/", methods=["GET"])
+        @login_required
         def render_table():
             '''Рендер страницы с таблицой'''
 
@@ -52,6 +54,7 @@ class TableRoutes():
             )
 
         @self.blueprint.route("/delete/<int:id>", methods=["DELETE"])
+        @login_required
         def delete_entry(id):
             '''Удаление записи из таблицы'''
             try:
@@ -61,6 +64,7 @@ class TableRoutes():
                 return jsonify({"success": False, "error": str(e)}), 500
 
         @self.blueprint.route("/save", methods=["POST"])
+        @login_required
         def save_entry():
             '''Сохранение записи в таблице'''
             data = request.json

@@ -97,15 +97,17 @@ field_of_activity_routes = FieldOfActivityRoutes()
 city_routes = CityRoutes()
 street_routes = StreetRoutes()
 
-directories_blueprints = [
-    directories_blueprint,
-    specializations_routes.get_blueprint(),
-    education_level_routes.get_blueprint(),
-    educational_institution_routes.get_blueprint(),
-    education_document_routes.get_blueprint(),
-    allowance_routes.get_blueprint(),
-    applicant_requirements_routes.get_blueprint(),
-    field_of_activity_routes.get_blueprint(),
-    city_routes.get_blueprint(),
-    street_routes.get_blueprint()
-]
+directories_blueprints = {
+    'directories_blueprint.render_table': directories_blueprint,
+    'specializations.render_table': specializations_routes.get_blueprint(),
+    'education_level.render_table': education_level_routes.get_blueprint(),
+    'educational_institution.render_table':
+        educational_institution_routes.get_blueprint(),
+    'education_document.render_table':
+        education_document_routes.get_blueprint(),
+    'allowance.render_table': allowance_routes.get_blueprint(),
+    'applicant.render_table': applicant_requirements_routes.get_blueprint(),
+    'field.render_table': field_of_activity_routes.get_blueprint(),
+    'city.render_table': city_routes.get_blueprint(),
+    'street.render_table': street_routes.get_blueprint()
+}

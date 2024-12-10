@@ -184,3 +184,4 @@ CREATE TABLE user_rights(
     FOREIGN KEY (id_menu) REFERENCES menu(id)
 );
 
+

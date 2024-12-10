@@ -14,17 +14,20 @@ class User(UserMixin):
 
 def get_user_by_id(user_id):
     cursor = get_db_connection().cursor()
-    cursor.execute("SELECT id, login, password_hash"
-                   "FROM app_user WHERE id = %s", (user_id,))
-    row = cursor.fetchone()
-    if row:
-        return User(row[0], row[1], row[2])
-    return None
+    try:
+        cursor.execute("SELECT id, login, password_hash "
+                       "FROM app_user WHERE id = %s", (user_id,))
+        row = cursor.fetchone()
+        if row:
+            return User(row[0], row[1], row[2])
+        return None
+    except Exception:
+        return None
 
 
 def get_user_id(login):
     cursor = get_db_connection().cursor()
-    cursor.execute("SELECT id, login, password_hash"
+    cursor.execute("SELECT id, login, password_hash "
                    "FROM app_user WHERE login = %s", (login, ))
     row = cursor.fetchone()
     if row:
@@ -34,6 +37,6 @@ def get_user_id(login):
 
 def add_user(login, hashed_password):
     cursor = get_db_connection().cursor()
-    cursor.execute("INSERT INTO app_user (login, password_hash)"
+    cursor.execute("INSERT INTO app_user (login, password_hash) "
                    "VALUES (%s, %s)", (login, hashed_password))
     get_db_connection().commit()

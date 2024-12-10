@@ -2,9 +2,7 @@ from flask import Flask
 from config import Config
 from flask_login import LoginManager  # type: ignore
 from .repositories.db import init_db
-from .routes import home_blueprint, ArchiveRoutes, ApplicantsRoutes
-from .routes import VacanciesRoutes, EmployersRoutes
-from .routes import directories_blueprints
+from .routes import blueprints
 from .repositories import get_user_by_id
 
 
@@ -14,20 +12,8 @@ def create_app():
     init_db(app)
 
     # Регистрация Blueprint
-    app.register_blueprint(home_blueprint)
-
-    archive = ArchiveRoutes()
-    applicants = ApplicantsRoutes()
-    vacancies = VacanciesRoutes()
-    employers = EmployersRoutes()
-
-    app.register_blueprint(archive.get_blueprint())
-    app.register_blueprint(applicants.get_blueprint())
-    app.register_blueprint(vacancies.get_blueprint())
-    app.register_blueprint(employers.get_blueprint())
-
-    for bp in directories_blueprints:
-        app.register_blueprint(bp)
+    for bp_name in blueprints:
+        app.register_blueprint(blueprints[bp_name])
 
     # Система авторизаций
     login_manager = LoginManager()

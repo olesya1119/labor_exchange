@@ -100,3 +100,16 @@ class ArchiveRoutes(TableRoutes):
     def __init__(self):
         super().__init__(ArchiveService(), 'archive', '/archive',
                          'archive')
+
+
+archive = ArchiveRoutes()
+applicants = ApplicantsRoutes()
+vacancies = VacanciesRoutes()
+employers = EmployersRoutes()
+
+table_blueprints = {
+    'archive.render_table': archive.get_blueprint(),
+    'applicants.render_table': applicants.get_blueprint(),
+    'vacancies.render_table': vacancies.get_blueprint(),
+    'employers.render_table': employers.get_blueprint()
+}

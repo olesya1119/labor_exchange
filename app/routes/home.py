@@ -7,6 +7,7 @@ from app.repositories import get_user_id, add_user, get_user_by_id
 
 
 home_blueprint = Blueprint('home', __name__, url_prefix='/',)
+home_blueprints = {'home.render_home': home_blueprint}
 
 
 # TODO: сделать отдельную страницу главной страницы.

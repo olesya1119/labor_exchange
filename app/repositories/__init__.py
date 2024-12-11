@@ -10,3 +10,4 @@ from .vacancy import VacancyRepository, VacancyApplicantRequirementsRepository, 
 from .employer import EmployerRepository
 from .base_repository import BaseRepository
 from .auth import get_user_by_id, add_user, get_user_id
+from .pages_controller import get_menu_by_id, get_activ_page

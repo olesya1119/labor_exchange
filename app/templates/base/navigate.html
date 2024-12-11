@@ -4,18 +4,18 @@
         {% for page in pages %}
             {% if page.have_submenu %}
                 <div class="menu-item">
-                    <a href="#" class="navigate_link">{{ page.ru }}</a>
+                    <a href="#" class="navigate_link">{{ page.name }}</a>
                     <div class="submenu">
                         {% for subpage in page.submenu %}
-                        <a href="{{ url_for(subpage.name) }}" {% if subpage.name == active_page.name %} class="active_navigate_link" {% else %} class="navigate_link" {% endif %}>
-                            {{ subpage.ru }}
+                        <a href="{{ url_for(subpage.function_name) }}" {% if subpage.function_name == active_page.function_name %} class="active_navigate_link" {% else %} class="navigate_link" {% endif %}>
+                            {{ subpage.name }}
                         </a>
                         {% endfor %}
                     </div>
                 </div>
             {% elif page.name != pages.0.name %}
-                <a href="{{ url_for(page.name) }}" {% if page.name == active_page.name %} class="active_navigate_link" {% else %} class="navigate_link" {% endif %}>
-                    {{ page.ru }}
+                <a href="{{ url_for(page.function_name) }}" {% if page.function_name == active_page.function_name %} class="active_navigate_link" {% else %} class="navigate_link" {% endif %}>
+                    {{ page.name }}
                 </a>
             {% endif %}
         {% endfor %}

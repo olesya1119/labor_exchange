@@ -160,7 +160,7 @@ CREATE TABLE vacancy_field_of_activity(
 
 CREATE TABLE menu(
     id SERIAL PRIMARY KEY,
-    id_parent INTEGER NOT NULL,
+    parent_id INTEGER NOT NULL,
     name VARCHAR(50) NOT NULL,
     function_name VARCHAR(50) NOT NULL,
     menu_order INTEGER NOT NULL
@@ -174,8 +174,8 @@ CREATE TABLE app_user(
 
 CREATE TABLE user_rights(
     id SERIAL PRIMARY KEY,
-    id_app_user INTEGER NOT NULL,
-    id_menu INTEGER NOT NULL,
+    app_user_id INTEGER NOT NULL,
+    menu_id INTEGER NOT NULL,
     r BOOLEAN NOT NULL,
     w BOOLEAN NOT NULL,
     e BOOLEAN NOT NULL,
@@ -183,5 +183,11 @@ CREATE TABLE user_rights(
     FOREIGN KEY (id_app_user) REFERENCES app_user(id),
     FOREIGN KEY (id_menu) REFERENCES menu(id)
 );
+
+SELECT menu.menu_order, menu.id, menu.id_parent, menu.function_name, menu.name, user_rights.r, user_rights.w, user_rights.e, user_rights.d
+LEFT FROM user_rights
+JOIN menu ON menu.id = user_rights.id
+WHERE user_rights.app_user = %s
+ORDER BY menu.id, menu.id_parent, menu.menu_order;
 
 

@@ -1,9 +1,9 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
-from .pages_controller import get_active_page, get_all_pages
 from flask_login import login_user, login_required  # type: ignore
-from flask_login import logout_user  # type: ignore
+from flask_login import logout_user, current_user  # type: ignore
 from werkzeug.security import generate_password_hash, check_password_hash
 from app.repositories import get_user_id, add_user, get_user_by_id
+from app.repositories import get_activ_page, get_menu_by_id
 
 
 home_blueprint = Blueprint('home', __name__, url_prefix='/',)
@@ -17,10 +17,10 @@ home_blueprints = {'home.render_home': home_blueprint}
 @login_required
 def render_home():
     '''Рендер главной страницы'''
-
+    pages = get_menu_by_id(current_user.get_id())
     return render_template("home/home.html",
-                           active_page=get_active_page('home.home'),
-                           pages=get_all_pages())
+                           active_page=get_activ_page(pages, 'home.home'),
+                           pages=pages)
 
 
 @home_blueprint.route('/register', methods=['GET', 'POST'])
@@ -63,28 +63,31 @@ def protected():
 @login_required
 def logout():
     logout_user()
-    return redirect(url_for('login'))
+    return redirect(url_for('home.login'))
 
 
 @home_blueprint.route("/documents")
 @login_required
 def documents():
+    pages = get_menu_by_id(current_user.get_id())
     return render_template("documents/documents.html",
-                           active_page=get_active_page('documents'),
-                           pages=get_all_pages())
+                           active_page=get_activ_page(pages, 'documents'),
+                           pages=pages)
 
 
 @home_blueprint.route("/help")
 @login_required
 def help():
+    pages = get_menu_by_id(current_user.get_id())
     return render_template("help/help.html",
-                           active_page=get_active_page('help'),
-                           pages=get_all_pages())
+                           active_page=get_activ_page(pages, 'help'),
+                           pages=pages)
 
 
 @home_blueprint.route("/various")
 @login_required
 def various():
+    pages = get_menu_by_id(current_user.get_id())
     return render_template("various/various.html",
-                           active_page=get_active_page('various'),
-                           pages=get_all_pages())
+                           active_page=get_activ_page(pages, 'various'),
+                           pages=pages)

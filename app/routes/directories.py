@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template
-from .pages_controller import get_active_page, get_all_pages
+from flask_login import current_user  # type: ignore
 from .table_routes import TableRoutes
 from app.services import SpecializationService, EducationLevelService
 from app.services import EducationDocumentService, AllowanceService
@@ -7,6 +7,7 @@ from app.services import EducationalInstitutionService
 from app.services import ApplicantRequirementsService
 from app.services import FieldOfActivityService
 from app.services import CityService, StreetService
+from app.repositories import get_activ_page, get_menu_by_id
 
 
 directories_blueprint = Blueprint('directories', __name__,
@@ -15,11 +16,12 @@ directories_blueprint = Blueprint('directories', __name__,
 
 @directories_blueprint.route("/")
 def render_directories():
-
+    pages = get_menu_by_id(current_user.get_id())
     return render_template("directories/directories.html",
-                           active_page=get_active_page(
+                           active_page=get_activ_page(
+                               pages,
                                'directories.render_directories'),
-                           pages=get_all_pages())
+                           pages=pages)
 
 
 class SpecializationsRoutes(TableRoutes):

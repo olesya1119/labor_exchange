@@ -1,8 +1,8 @@
 from app.services import BaseService, ApplicantService
 from app.services import ArchiveService, VacancyService, EmployerService
 from flask import Blueprint, render_template, request, jsonify
-from .pages_controller import get_active_page, get_all_pages
-from flask_login import login_required  # type: ignore
+from flask_login import login_required, current_user  # type: ignore
+from app.repositories import get_activ_page, get_menu_by_id
 
 '''
 Файл описывает классы, которые отвечают за маршруты всех табличных страниц.
@@ -32,6 +32,7 @@ class TableRoutes():
         @self.blueprint.route("/", methods=["GET"])
         @login_required
         def render_table():
+            pages = get_menu_by_id(current_user.get_id())
             '''Рендер страницы с таблицой'''
 
             # Количество строк в таблице
@@ -44,8 +45,9 @@ class TableRoutes():
 
             return render_template(
                 f"{self.template_folder}/{self.app_name}.html",
-                active_page=get_active_page(f"{self.app_name}.render_table"),
-                pages=get_all_pages(),
+                active_page=get_activ_page(pages,
+                                           f"{self.app_name}.render_table"),
+                pages=pages,
                 data=self.service.get_table(),
                 head=self.service.table_fields,
                 records_per_page=records_per_page,

@@ -85,8 +85,16 @@ class ApplicantRepository(BaseRepository):
         )
 
     @BaseRepository.fetch_results_with_head
-    def select(self, limit: int, offset: int, order_by: str = 'id',
+    def select(self, limit: int, offset: int, order_by: int = 0,
                order_acs: bool = True) -> Tuple[str, tuple]:
+        title = ['id', 'last_name', 'first_name', 'middle_name', 'age',
+                 'passport_number', 'passport_issue_date',
+                 'passport_issued_by', 'city_id', 'street_id',
+                 'house_number', 'phone_number', 'photo',
+                 'education_level_id', 'education_document_id',
+                 'education_document_details', 'registration_date',
+                 'allowance_id']
+
         return (
             f'''SELECT id AS "ID", last_name AS Фамилия, first_name AS Имя,
             middle_name AS Отчество, age AS Возраст,
@@ -102,30 +110,32 @@ class ApplicantRepository(BaseRepository):
             registration_date AS "Дата постановки на учет",
             allowance_id AS "ID Пособие"
             FROM {self.table_name}
-            ORDER BY {order_by} {'ASC' if order_acs else 'DESC'}
+            ORDER BY {title[order_by]} {'ASC' if order_acs else 'DESC'}
             LIMIT %s OFFSET %s
             ''',
-            (
-                limit,
-                offset,
-            ),
+            (limit, offset),
         )
 
     @BaseRepository.fetch_results_with_head
     def select_with_join(self, limit: int, offset: int,
-                         order_by: str = 'applicant.id', order_acs: bool = True
+                         order_by: int = 0, order_acs: bool = True
                          ) -> Tuple[str, tuple]:
+        title = ['applicant.id', 'last_name', 'first_name', 'middle_name',
+                 'age', 'passport_number', 'passport_issue_date',
+                 'passport_issued_by',
+                 'city.name, street.name, house_number', 'phone_number',
+                 'photo', 'education_level.name', 'education_document.name',
+                 'registration_date', 'allowance.amount']
+
         return (
             f'''SELECT applicant.id AS "ID", last_name AS Фамилия,
-            first_name AS Имя,
-            middle_name AS Отчество, age AS Возраст,
+            first_name AS Имя, middle_name AS Отчество, age AS Возраст,
             passport_number AS "Номер паспорта",
             passport_issue_date AS "Дата выдачи паспорта",
             passport_issued_by AS "Кем выдан паспорт",
-            'г. ' || city.name || ', ул. ' || street.name || ', д. '
-            || house_number AS Адрес,
-            phone_number AS "Номер телефона",
-            photo AS "Фотография",
+            CONCAT('г. ', city.name, ', ул. ', street.name, ', д. ',
+            house_number) AS Адрес,
+            phone_number AS "Номер телефона", photo AS "Фотография",
             education_level.name AS "Уровень образования",
             education_document.name AS "Документ об образовании",
             education_document_details AS "Данные документа об образовании",
@@ -139,13 +149,10 @@ class ApplicantRepository(BaseRepository):
             LEFT JOIN education_document ON education_document.id =
             education_document_id
             LEFT JOIN allowance ON allowance.id = allowance_id
-            ORDER BY {order_by} {'ASC' if order_acs else 'DESC'}
+            ORDER BY {title[order_by]} {'ASC' if order_acs else 'DESC'}
             LIMIT %s OFFSET %s
             ''',
-            (
-                limit,
-                offset,
-            ),
+            (limit, offset),
         )
 
 
@@ -184,21 +191,28 @@ class SpecializationApplicantRepository(BaseRepository):
         )
 
     @BaseRepository.fetch_results_with_head
-    def select(self, limit: int, offset: int, order_by: str = 'id',
+    def select(self, limit: int, offset: int, order_by: int = 0,
                order_acs: bool = True) -> Tuple[str, tuple]:
+        title = ['id', 'applicant_id', 'specialization_id', 'work_experience']
+
         return (
             f'''SELECT id AS "ID",
             applicant_id AS "ID Соискатель",
             specialization_id AS "ID Специальность",
             work_experience AS "Стаж работы"
-            FROM {self.table_name} '''
-            f'''ORDER BY {order_by} {'ASC' if order_acs else 'DESC'} '''
-            f'''LIMIT %s OFFSET %s''',
+            FROM {self.table_name}
+            ORDER BY {title[order_by]} {'ASC' if order_acs else 'DESC'}
+            LIMIT %s OFFSET %s''',
             (limit, offset))
 
     @BaseRepository.fetch_results_with_head
-    def select_with_join(self, limit: int, offset: int, order_by: str = 'id',
+    def select_with_join(self, limit: int, offset: int, order_by: int = 0,
                          order_acs: bool = True) -> Tuple[str, tuple]:
+        title = ['specialization_applicant.id',
+                 'applicant.last_name, applicant.first_name, '
+                 'applicant.middle_name', 'specialization.name',
+                 'work_experience']
+
         return (
             f'''SELECT id AS "ID"
             applicant.last_name | ' ' | applicant.first_name |
@@ -207,9 +221,9 @@ class SpecializationApplicantRepository(BaseRepository):
             work_experience AS "Стаж работы"
             JOIN applicant ON applicant.id = applicant_id
             JOIN specialization ON specialization.id = specialization_id
-            FROM {self.table_name} '''
-            f'''ORDER BY {order_by} {'ASC' if order_acs else 'DESC'} '''
-            f'''LIMIT %s OFFSET %s''',
+            FROM {self.table_name}
+            ORDER BY {title[order_by]} {'ASC' if order_acs else 'DESC'}
+            LIMIT %s OFFSET %s''',
             (limit, offset))
 
 
@@ -246,29 +260,35 @@ class EducationalInstitutionApplicantRepository(BaseRepository):
         )
 
     @BaseRepository.fetch_results_with_head
-    def select(self, limit: int, offset: int, order_by: str = 'id',
+    def select(self, limit: int, offset: int, order_by: int = 0,
                order_acs: bool = True) -> Tuple[str, tuple]:
+        title = ['id', 'applicant_id', 'educational_institution_id']
+
         return (
             f'''SELECT id AS "ID",
             applicant_id AS "ID Соискатель",
             educational_institution_id AS "ID Учебное заведение"
-            FROM {self.table_name} '''
-            f'''ORDER BY {order_by} {'ASC' if order_acs else 'DESC'} '''
-            f'''LIMIT %s OFFSET %s''',
+            FROM {self.table_name}
+            ORDER BY {title[order_by]} {'ASC' if order_acs else 'DESC'}
+            LIMIT %s OFFSET %s''',
             (limit, offset))
 
     @BaseRepository.fetch_results_with_head
-    def select_with_join(self, limit: int, offset: int, order_by: str = 'id',
+    def select_with_join(self, limit: int, offset: int, order_by: int = 0,
                          order_acs: bool = True) -> Tuple[str, tuple]:
+        title = ['educational_institution_applicant.id',
+                 'applicant.last_name, applicant.first_name, '
+                 'applicant.middle_name', 'educational_institution.name']
+
         return (
-            f'''SELECT id AS "ID"
+            f'''SELECT educational_institution_applicant.id AS "ID"
             applicant.last_name | ' ' | applicant.first_name |
             ' ' | applicant.middle_name AS "Соискатель",
             educational_institution.name AS "Учебное заведение"
             JOIN applicant ON applicant.id = applicant_id
             JOIN educational_institution ON educational_institution.id =
             educational_institution_id
-            FROM {self.table_name} '''
-            f'''ORDER BY {order_by} {'ASC' if order_acs else 'DESC'} '''
-            f'''LIMIT %s OFFSET %s''',
+            FROM {self.table_name}
+            ORDER BY {title[order_by]} {'ASC' if order_acs else 'DESC'}
+            LIMIT %s OFFSET %s''',
             (limit, offset))

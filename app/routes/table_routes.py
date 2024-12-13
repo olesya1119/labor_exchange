@@ -39,14 +39,15 @@ class TableRoutes():
             records_per_page = int(request.args.get('records_per_page', 10))
             # Параметры сортировки
             sort_by = request.args.get('sort_by', default=0, type=int)
-            sort_dir = request.args.get('sort_dir', default='asc', type=bool)
+            sort_dir = request.args.get('sort_dir', default='True', type=str)
 
             # Номер страницы
             page = int(request.args.get('page', 1))
             # Обновляем класс - сервис
             self.service.set_limit(records_per_page)
             self.service.set_page(page)
-            self.service.set_sort(sort_by, sort_dir)
+            self.service.set_sort(sort_by, True if
+                                  sort_dir == 'True' else False)
 
             return render_template(
                 f"{self.template_folder}/{self.app_name}.html",

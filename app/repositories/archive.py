@@ -36,29 +36,33 @@ class ArchiveRepository(BaseRepository):
         )
 
     @BaseRepository.fetch_results_with_head
-    def select(self, limit: int, offset: int, order_by: str = 'id',
+    def select(self, limit: int, offset: int, order_by: int = 0,
                order_acs: bool = True) -> Tuple[str, tuple]:
+        title = ['id', 'applicant_id', 'archive_date', 'performed_by']
         return (
             f'''SELECT id AS "ID",
             applicant_id AS "ID Соискатель",
             archive_date AS "Дата перевода в архив",
             performed_by AS "Лицо, выполнившее операцию"
-            FROM {self.table_name} '''
-            f'''ORDER BY {order_by} {'ASC' if order_acs else 'DESC'} '''
-            f'''LIMIT %s OFFSET %s''',
+            FROM {self.table_name}
+            ORDER BY {title[order_by]} {'ASC' if order_acs else 'DESC'}
+            LIMIT %s OFFSET %s''',
             (limit, offset))
 
     @BaseRepository.fetch_results_with_head
-    def select_with_join(self, limit: int, offset: int, order_by: str = 'id',
+    def select_with_join(self, limit: int, offset: int, order_by: int = 0,
                          order_acs: bool = True) -> Tuple[str, tuple]:
+        title = ['archive.id',
+                 'applicant.last_name, applicant.first_name, '
+                 'applicant.middle_name', 'archive_date', 'performed_by']
         return (
-            f'''SELECT id AS "ID"
+            f'''SELECT archive.id AS "ID"
             applicant.last_name | ' ' | applicant.first_name |
             ' ' | applicant.middle_name AS "Соискатель",
             archive_date AS "Дата перевода в архив",
             performed_by AS "Лицо, выполнившее операцию"
             JOIN applicant ON applicant.id = applicant_id
-            FROM {self.table_name} '''
-            f'''ORDER BY {order_by} {'ASC' if order_acs else 'DESC'} '''
-            f'''LIMIT %s OFFSET %s''',
+            FROM {self.table_name}
+            ORDER BY {title[order_by]} {'ASC' if order_acs else 'DESC'}
+            LIMIT %s OFFSET %s''',
             (limit, offset))

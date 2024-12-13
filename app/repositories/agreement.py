@@ -33,11 +33,11 @@ class AgreementRepository(BaseRepository):
     @BaseRepository.fetch_results_with_head
     def select(self, limit: int, offset: int, order_by: int = 0,
                order_acs: bool = True) -> Tuple[str, tuple]:
-        title = ['id', 'agreement.id', 'vacancy_id', 'signature_date']
+        title = ['id', 'applicant_id', 'vacancy_id', 'signature_date']
 
         return (
             f'''SELECT id AS "ID",
-            agreement.id AS "ID Соискатель",
+            applicant_id AS "ID Соискатель",
             vacancy_id AS "ID Вакансия",
             signature_date AS "Дата подписания"
             FROM {self.table_name}
@@ -48,7 +48,7 @@ class AgreementRepository(BaseRepository):
     @BaseRepository.fetch_results_with_head
     def select_with_join(self, limit: int, offset: int, order_by: int = 0,
                          order_acs: bool = True) -> Tuple[str, tuple]:
-        title = ['id', 'applicant.last_name, applicant.first_name, '
+        title = ['agreement.id', 'applicant.last_name, applicant.first_name, '
                  'applicant.middle_name', 'vacancy.position_title',
                  'signature_date']
         return (

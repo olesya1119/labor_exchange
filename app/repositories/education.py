@@ -32,17 +32,19 @@ class EducationalInstitutionRepository(BaseRepository):
         )
 
     @BaseRepository.fetch_results_with_head
-    def select(self, limit: int, offset: int, order_by: str = 'id',
+    def select(self, limit: int, offset: int, order_by: int = 0,
                order_acs: bool = True) -> Tuple[str, tuple]:
+        title = ['id', 'name']
+
         return (
             f'''SELECT id AS "ID",
             name AS "Название учебного заведения",
-            FROM {self.table_name} '''
-            f'''ORDER BY {order_by} {'ASC' if order_acs else 'DESC'} '''
-            f'''LIMIT %s OFFSET %s''',
+            FROM {self.table_name}
+            ORDER BY {title[order_by]} {'ASC' if order_acs else 'DESC'}
+            LIMIT %s OFFSET %s''',
             (limit, offset))
 
-    def select_with_join(self, limit: int, offset: int, order_by: str = 'id',
+    def select_with_join(self, limit: int, offset: int, order_by: int = 0,
                          order_acs: bool = True):
         self.select(self, limit, offset, order_by, order_acs)
 
@@ -73,17 +75,19 @@ class EducationLevelRepository(BaseRepository):
         )
 
     @BaseRepository.fetch_results_with_head
-    def select(self, limit: int, offset: int, order_by: str = 'id',
+    def select(self, limit: int, offset: int, order_by: int = 0,
                order_acs: bool = True) -> Tuple[str, tuple]:
+        title = ['id', 'name']
+
         return (
             f'''SELECT id AS "ID",
             name AS "Название уровня образования",
-            FROM {self.table_name} '''
-            f'''ORDER BY {order_by} {'ASC' if order_acs else 'DESC'} '''
-            f'''LIMIT %s OFFSET %s''',
+            FROM {self.table_name}
+            ORDER BY {title[order_by]} {'ASC' if order_acs else 'DESC'}
+            LIMIT %s OFFSET %s''',
             (limit, offset))
 
-    def select_with_join(self, limit: int, offset: int, order_by: str = 'id',
+    def select_with_join(self, limit: int, offset: int, order_by: int = 0,
                          order_acs: bool = True):
         self.select(self, limit, offset, order_by, order_acs)
 
@@ -115,16 +119,18 @@ class EducationDocumentRepository(BaseRepository):
         )
 
     @BaseRepository.fetch_results_with_head
-    def select(self, limit: int, offset: int, order_by: str = 'id',
+    def select(self, limit: int, offset: int, order_by: int = 0,
                order_acs: bool = True) -> Tuple[str, tuple]:
+        title = ['id', 'name']
+
         return (
-            f'''SELECT id AS "ID",
+            f'''SELECT education_document.id AS "ID",
             name AS "Название документа об образовании",
-            FROM {self.table_name} '''
-            f'''ORDER BY {order_by} {'ASC' if order_acs else 'DESC'} '''
-            f'''LIMIT %s OFFSET %s''',
+            FROM {self.table_name}
+            ORDER BY {title[order_by]} {'ASC' if order_acs else 'DESC'}
+            LIMIT %s OFFSET %s''',
             (limit, offset))
 
-    def select_with_join(self, limit: int, offset: int, order_by: str = 'id',
+    def select_with_join(self, limit: int, offset: int, order_by: int = 0,
                          order_acs: bool = True):
         self.select(self, limit, offset, order_by, order_acs)

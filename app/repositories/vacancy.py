@@ -41,10 +41,30 @@ class VacancyRepository(BaseRepository):
         )
 
     @BaseRepository.fetch_results_with_head
-    def select(self, limit: int, offset: int, order_by: str = 'id',
+    def select(self, limit: int, offset: int, order_by: int = 0,
                order_acs: bool = True) -> Tuple[str, tuple]:
+        title = ['id', 'position_title', 'lower_limit_of_salary',
+                 'upper_limit_of_salary', 'employer_id']
         return (
             f'''SELECT id AS "ID",
+            position_title AS "Должность",
+            lower_limit_of_salary AS "Нижняя граница зарплаты",
+            upper_limit_of_salary AS "Верхняя граница зарплаты",
+            employer_id AS "ID Работодатель"
+            FROM {self.table_name}
+            ORDER BY {title[order_by]} {'ASC' if order_acs else 'DESC'}
+            LIMIT %s OFFSET %s''',
+            (limit, offset))
+
+    @BaseRepository.fetch_results_with_head
+    def select_with_join(self, limit: int, offset: int, order_by: int = 0,
+                         order_acs: bool = True) -> Tuple[str, tuple]:
+        title = ['vacancy.id', 'position_title',
+                 'lower_limit_of_salary, upper_limit_of_salary',
+                 'employer.name']
+
+        return (
+            f'''SELECT vacancy.id AS "ID",
             position_title AS "Должность",
             COALESCE(
                 CASE
@@ -58,24 +78,10 @@ class VacancyRepository(BaseRepository):
                         upper_limit_of_salary
                 END, 'Не указано'
             ) AS "Зарплата",
-            employer_id AS "ID Работодатель"
-            FROM {self.table_name}
-            ORDER BY {order_by} {'ASC' if order_acs else 'DESC'}
-            LIMIT %s OFFSET %s''',
-            (limit, offset))
-
-    @BaseRepository.fetch_results_with_head
-    def select_with_join(self, limit: int, offset: int, order_by: str = 'id',
-                         order_acs: bool = True) -> Tuple[str, tuple]:
-        return (
-            f'''SELECT id AS "ID",
-            position_title AS "Должность",
-            lower_limit_of_salary AS "Нижняя граница зарплаты",
-            upper_limit_of_salary AS "Верхняя граница зарплаты",
             employer.name AS "Работодатель"
             FROM {self.table_name}
             JEFT JOIN employer ON employer.id = employer_id
-            ORDER BY {order_by} {'ASC' if order_acs else 'DESC'}
+            ORDER BY {title[order_by]} {'ASC' if order_acs else 'DESC'}
             LIMIT %s OFFSET %s''',
             (limit, offset))
 
@@ -112,30 +118,35 @@ class VacancyApplicantRequirementsRepository(BaseRepository):
         )
 
     @BaseRepository.fetch_results_with_head
-    def select(self, limit: int, offset: int, order_by: str = 'id',
+    def select(self, limit: int, offset: int, order_by: int = 0,
                order_acs: bool = True) -> Tuple[str, tuple]:
+        title = ['id', 'applicant_requirements_id', 'vacancy_id']
+
         return (
             f'''SELECT id AS "ID",
             applicant_requirements_id AS "ID Требования к соискателю",
             vacancy_id AS "ID Вакансия"
-            FROM {self.table_name} '''
-            f'''ORDER BY {order_by} {'ASC' if order_acs else 'DESC'} '''
-            f'''LIMIT %s OFFSET %s''',
+            FROM {self.table_name}
+            ORDER BY {title[order_by]} {'ASC' if order_acs else 'DESC'}
+            LIMIT %s OFFSET %s''',
             (limit, offset))
 
     @BaseRepository.fetch_results_with_head
-    def select_with_join(self, limit: int, offset: int, order_by: str = 'id',
+    def select_with_join(self, limit: int, offset: int, order_by: int = 0,
                          order_acs: bool = True) -> Tuple[str, tuple]:
+        title = ['vacancy_applicant_requirements.id',
+                 'applicant_requirements.name', 'vacancy.position_title']
+
         return (
-            f'''SELECT id AS "ID"
-            applicant_requirements_id AS "Требования к соискателю",
-            vacancy.name AS "Вакансия"
+            f'''SELECT vacancy_applicant_requirements.id AS "ID"
+            applicant_requirements.name AS "Требования к соискателю",
+            vacancy.position_title AS "Вакансия"
             JOIN applicant_requirements ON applicant_requirements.id
             = applicant_requirements_id
             JOIN vacancy ON vacancy.id = vacancy_id
-            FROM {self.table_name} '''
-            f'''ORDER BY {order_by} {'ASC' if order_acs else 'DESC'} '''
-            f'''LIMIT %s OFFSET %s''',
+            FROM {self.table_name}
+            ORDER BY {title[order_by]} {'ASC' if order_acs else 'DESC'}
+            LIMIT %s OFFSET %s''',
             (limit, offset))
 
 
@@ -171,28 +182,33 @@ class VacancyFieldOfActivityRepository(BaseRepository):
         )
 
     @BaseRepository.fetch_results_with_head
-    def select(self, limit: int, offset: int, order_by: str = 'id',
+    def select(self, limit: int, offset: int, order_by: int = 0,
                order_acs: bool = True) -> Tuple[str, tuple]:
+        title = ['id', 'field_of_activity_id', 'vacancy_id']
+
         return (
             f'''SELECT id AS "ID",
             field_of_activity_id AS "ID Сферы деятельности",
             vacancy_id AS "ID Вакансия"
-            FROM {self.table_name} '''
-            f'''ORDER BY {order_by} {'ASC' if order_acs else 'DESC'} '''
-            f'''LIMIT %s OFFSET %s''',
+            FROM {self.table_name}
+            ORDER BY {title[order_by]} {'ASC' if order_acs else 'DESC'}
+            LIMIT %s OFFSET %s''',
             (limit, offset))
 
     @BaseRepository.fetch_results_with_head
-    def select_with_join(self, limit: int, offset: int, order_by: str = 'id',
+    def select_with_join(self, limit: int, offset: int, order_by: int = 0,
                          order_acs: bool = True) -> Tuple[str, tuple]:
+        title = ['vacancy_field_of_activity.id',
+                 'field_of_activity.name', 'vacancy.position_title']
+
         return (
-            f'''SELECT id AS "ID"
-            field_of_activity_id AS "Сферы деятельности",
-            vacancy.name AS "Вакансия"
+            f'''SELECT vacancy_field_of_activity.id AS "ID"
+            field_of_activity.name AS "Сферы деятельности",
+            vacancy.position_title AS "Вакансия"
             JOIN field_of_activity ON field_of_activity.id
             = field_of_activity_id
             JOIN vacancy ON vacancy.id = vacancy_id
-            FROM {self.table_name} '''
-            f'''ORDER BY {order_by} {'ASC' if order_acs else 'DESC'} '''
-            f'''LIMIT %s OFFSET %s''',
+            FROM {self.table_name}
+            ORDER BY {title[order_by]} {'ASC' if order_acs else 'DESC'}
+            LIMIT %s OFFSET %s''',
             (limit, offset))

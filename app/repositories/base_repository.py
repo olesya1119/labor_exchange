@@ -11,8 +11,6 @@ class BaseRepository():
     def execute_query(func):
         def wrapper(*args, **kwargs):
             cursor = get_db_connection().cursor()
-            print(*args, **kwargs)
-            print(func(*args, **kwargs))
             query, values = func(*args, **kwargs)
             try:
                 cursor.execute(query, values)
@@ -29,7 +27,6 @@ class BaseRepository():
         def wrapper(*args, **kwargs):
             cursor = get_db_connection().cursor()
             query, values = func(*args, **kwargs)
-            print(query, values)
             try:
                 cursor.execute(query, values)
                 return cursor.fetchall()
@@ -44,7 +41,6 @@ class BaseRepository():
         def wrapper(*args, **kwargs):
             cursor = get_db_connection().cursor()
             query, values = func(*args, **kwargs)
-            print(query, values)
             try:
                 cursor.execute(query, values)
                 # Получение названий столбцов

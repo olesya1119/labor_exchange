@@ -23,18 +23,23 @@
 <table id="table" class="view-mode">
     <thead>
         <tr>
+            <th></th>
             {% for title in data.0 %}
             <th>
-                <a href="?sort_by={{ loop.index0 }}&sort_dir={% if current_sort_by == loop.index0 and current_sort_dir == 'asc' %}False{% else %}True{% endif %}">
-                    {{ title }}
-                    {% if current_sort_by == loop.index0 %}
-                        {% if current_sort_dir == 'asc' %}
-                            ▲
-                        {% else %}
-                            ▼
-                        {% endif %}
-                    {% endif %}
+                {{ title }}
+                <a href="?sort_by={{ loop.index0 }}&sort_dir=True">
+                    ▲
                 </a>
+                <a href="?sort_by={{ loop.index0 }}&sort_dir=False">
+                    ▼
+                </a>
+                {% if current_sort_by == loop.index0 %}
+                    {% if current_sort_dir == 'asc' %}
+                        <span>▲</span>
+                    {% else %}
+                        <span>▼</span>
+                    {% endif %}
+                {% endif %}
             </th>
             {% endfor %}
         </tr>

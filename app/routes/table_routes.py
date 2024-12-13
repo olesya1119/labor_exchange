@@ -37,11 +37,16 @@ class TableRoutes():
 
             # Количество строк в таблице
             records_per_page = int(request.args.get('records_per_page', 10))
+            # Параметры сортировки
+            sort_by = request.args.get('sort_by', default=0, type=int)
+            sort_dir = request.args.get('sort_dir', default='asc', type=bool)
+
             # Номер страницы
             page = int(request.args.get('page', 1))
             # Обновляем класс - сервис
             self.service.set_limit(records_per_page)
             self.service.set_page(page)
+            self.service.set_sort(sort_by, sort_dir)
 
             return render_template(
                 f"{self.template_folder}/{self.app_name}.html",
@@ -49,7 +54,6 @@ class TableRoutes():
                                            f"{self.app_name}.render_table"),
                 pages=pages,
                 data=self.service.get_table(),
-                head=self.service.table_fields,
                 records_per_page=records_per_page,
                 current_page=page,
                 total_pages=self.service.get_count_pages()

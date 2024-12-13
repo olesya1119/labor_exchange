@@ -184,10 +184,5 @@ CREATE TABLE user_rights(
     FOREIGN KEY (id_menu) REFERENCES menu(id)
 );
 
-SELECT menu.menu_order, menu.id, menu.id_parent, menu.function_name, menu.name, user_rights.r, user_rights.w, user_rights.e, user_rights.d
-LEFT FROM user_rights
-JOIN menu ON menu.id = user_rights.id
-WHERE user_rights.app_user = %s
-ORDER BY menu.id, menu.id_parent, menu.menu_order;
 
 

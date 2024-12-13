@@ -28,6 +28,21 @@ class CityRepository(BaseRepository):
             )
         )
 
+    @BaseRepository.fetch_results_with_head
+    def select(self, limit: int, offset: int, order_by: str = 'id',
+               order_acs: bool = True) -> Tuple[str, tuple]:
+        return (
+            f'''SELECT id AS "ID",
+            name AS "Название города",
+            FROM {self.table_name} '''
+            f'''ORDER BY {order_by} {'ASC' if order_acs else 'DESC'} '''
+            f'''LIMIT %s OFFSET %s''',
+            (limit, offset))
+
+    def select_with_join(self, limit: int, offset: int, order_by: str = 'id',
+                         order_acs: bool = True):
+        self.select(self, limit, offset, order_by, order_acs)
+
 
 class StreetRepository(BaseRepository):
     table_name = "street"
@@ -53,3 +68,18 @@ class StreetRepository(BaseRepository):
                 street.id,
             )
         )
+
+    @BaseRepository.fetch_results_with_head
+    def select(self, limit: int, offset: int, order_by: str = 'id',
+               order_acs: bool = True) -> Tuple[str, tuple]:
+        return (
+            f'''SELECT id AS "ID",
+            name AS "Название улицы",
+            FROM {self.table_name} '''
+            f'''ORDER BY {order_by} {'ASC' if order_acs else 'DESC'} '''
+            f'''LIMIT %s OFFSET %s''',
+            (limit, offset))
+
+    def select_with_join(self, limit: int, offset: int, order_by: str = 'id',
+                         order_acs: bool = True):
+        self.select(self, limit, offset, order_by, order_acs)

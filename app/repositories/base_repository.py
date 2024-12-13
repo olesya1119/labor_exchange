@@ -29,9 +29,33 @@ class BaseRepository():
         def wrapper(*args, **kwargs):
             cursor = get_db_connection().cursor()
             query, values = func(*args, **kwargs)
+            print(query, values)
             try:
                 cursor.execute(query, values)
                 return cursor.fetchall()
+            except Exception as e:
+                raise e
+            finally:
+                cursor.close()
+        return wrapper
+
+    @staticmethod
+    def fetch_results_with_head(func):
+        def wrapper(*args, **kwargs):
+            cursor = get_db_connection().cursor()
+            query, values = func(*args, **kwargs)
+            print(query, values)
+            try:
+                cursor.execute(query, values)
+                # Получение названий столбцов
+                column_names = tuple(desc[0] for desc in cursor.description)
+
+                # Получение данных
+                rows = cursor.fetchall()
+
+                # Формирование результата
+                result = [column_names] + rows
+                return result
             except Exception as e:
                 raise e
             finally:
@@ -68,14 +92,6 @@ class BaseRepository():
         return (f'''SELECT * FROM {self.table_name} ORDER BY '''
                 f'''{self.table_name}.id WHERE id = %s''', (id, ))
 
-    @fetch_results
-    def get_paginated(self, limit: int, offset: int) -> Tuple[str, tuple]:
-        '''Получить limit записей с offset сдвигом'''
-        return (
-            f'''SELECT * FROM {self.table_name} ORDER BY '''
-            f'''{self.table_name}.id LIMIT %s OFFSET %s''',
-            (limit, offset))
-
     @execute_query
     def delete_by_id(self, id: int) -> Tuple[str, tuple]:
         '''Удалить запись по id'''
@@ -99,3 +115,23 @@ class BaseRepository():
 
     # TODO: возможно это неправильно и стоит как-то иначе давать новые id
     # Если удалить и добавить последний элемент то id тот же
+
+    @fetch_results_with_head
+    def select(self, limit: int, offset: int, order_by: int = 0,
+               order_acs: bool = True) -> Tuple[str, tuple]:
+        return (
+            f'''SELECT *
+            FROM {self.table_name} '''
+            f'''ORDER BY id {'ASC' if order_acs else 'DESC'} '''
+            f'''LIMIT %s OFFSET %s''',
+            (limit, offset))
+
+    @fetch_results_with_head
+    def select_with_join(self, limit: int, offset: int, order_by: int = 0,
+                         order_acs: bool = True) -> Tuple[str, tuple]:
+        return (
+            f'''SELECT *
+            FROM {self.table_name} '''
+            f'''ORDER BY {order_by} {'ASC' if order_acs else 'DESC'} '''
+            f'''LIMIT %s OFFSET %s''',
+            (limit, offset))

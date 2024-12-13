@@ -34,3 +34,31 @@ class ArchiveRepository(BaseRepository):
                 archive.id,
             )
         )
+
+    @BaseRepository.fetch_results_with_head
+    def select(self, limit: int, offset: int, order_by: str = 'id',
+               order_acs: bool = True) -> Tuple[str, tuple]:
+        return (
+            f'''SELECT id AS "ID",
+            applicant_id AS "ID Соискатель",
+            archive_date AS "Дата перевода в архив",
+            performed_by AS "Лицо, выполнившее операцию"
+            FROM {self.table_name} '''
+            f'''ORDER BY {order_by} {'ASC' if order_acs else 'DESC'} '''
+            f'''LIMIT %s OFFSET %s''',
+            (limit, offset))
+
+    @BaseRepository.fetch_results_with_head
+    def select_with_join(self, limit: int, offset: int, order_by: str = 'id',
+                         order_acs: bool = True) -> Tuple[str, tuple]:
+        return (
+            f'''SELECT id AS "ID"
+            applicant.last_name | ' ' | applicant.first_name |
+            ' ' | applicant.middle_name AS "Соискатель",
+            archive_date AS "Дата перевода в архив",
+            performed_by AS "Лицо, выполнившее операцию"
+            JOIN applicant ON applicant.id = applicant_id
+            FROM {self.table_name} '''
+            f'''ORDER BY {order_by} {'ASC' if order_acs else 'DESC'} '''
+            f'''LIMIT %s OFFSET %s''',
+            (limit, offset))

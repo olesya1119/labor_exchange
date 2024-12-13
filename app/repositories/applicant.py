@@ -84,6 +84,70 @@ class ApplicantRepository(BaseRepository):
             ),
         )
 
+    @BaseRepository.fetch_results_with_head
+    def select(self, limit: int, offset: int, order_by: str = 'id',
+               order_acs: bool = True) -> Tuple[str, tuple]:
+        return (
+            f'''SELECT id AS "ID", last_name AS Фамилия, first_name AS Имя,
+            middle_name AS Отчество, age AS Возраст,
+            passport_number AS "Номер паспорта",
+            passport_issue_date AS "Дата выдачи паспорта",
+            passport_issued_by AS "Кем выдан паспорт",
+            city_id AS "ID Город", street_id AS "ID Улица",
+            house_number AS "Номер дома", phone_number AS "Номер телефона",
+            photo AS "Фотография",
+            education_level_id AS "ID Уровень образования",
+            education_document_id AS "ID Документ об образовании",
+            education_document_details AS "Данные документа об образовании",
+            registration_date AS "Дата постановки на учет",
+            allowance_id AS "ID Пособие"
+            FROM {self.table_name}
+            ORDER BY {order_by} {'ASC' if order_acs else 'DESC'}
+            LIMIT %s OFFSET %s
+            ''',
+            (
+                limit,
+                offset,
+            ),
+        )
+
+    @BaseRepository.fetch_results_with_head
+    def select_with_join(self, limit: int, offset: int,
+                         order_by: str = 'applicant.id', order_acs: bool = True
+                         ) -> Tuple[str, tuple]:
+        return (
+            f'''SELECT applicant.id AS "ID", last_name AS Фамилия,
+            first_name AS Имя,
+            middle_name AS Отчество, age AS Возраст,
+            passport_number AS "Номер паспорта",
+            passport_issue_date AS "Дата выдачи паспорта",
+            passport_issued_by AS "Кем выдан паспорт",
+            'г. ' || city.name || ', ул. ' || street.name || ', д. '
+            || house_number AS Адрес,
+            phone_number AS "Номер телефона",
+            photo AS "Фотография",
+            education_level.name AS "Уровень образования",
+            education_document.name AS "Документ об образовании",
+            education_document_details AS "Данные документа об образовании",
+            registration_date AS "Дата постановки на учет",
+            allowance.amount AS "Размер пособия"
+            FROM {self.table_name}
+            LEFT JOIN city ON city.id = city_id
+            LEFT JOIN street ON street.id = street_id
+            LEFT JOIN education_level ON education_level.id =
+            education_level_id
+            LEFT JOIN education_document ON education_document.id =
+            education_document_id
+            LEFT JOIN allowance ON allowance.id = allowance_id
+            ORDER BY {order_by} {'ASC' if order_acs else 'DESC'}
+            LIMIT %s OFFSET %s
+            ''',
+            (
+                limit,
+                offset,
+            ),
+        )
+
 
 class SpecializationApplicantRepository(BaseRepository):
     table_name = "specialization_applicant"
@@ -119,6 +183,35 @@ class SpecializationApplicantRepository(BaseRepository):
             ),
         )
 
+    @BaseRepository.fetch_results_with_head
+    def select(self, limit: int, offset: int, order_by: str = 'id',
+               order_acs: bool = True) -> Tuple[str, tuple]:
+        return (
+            f'''SELECT id AS "ID",
+            applicant_id AS "ID Соискатель",
+            specialization_id AS "ID Специальность",
+            work_experience AS "Стаж работы"
+            FROM {self.table_name} '''
+            f'''ORDER BY {order_by} {'ASC' if order_acs else 'DESC'} '''
+            f'''LIMIT %s OFFSET %s''',
+            (limit, offset))
+
+    @BaseRepository.fetch_results_with_head
+    def select_with_join(self, limit: int, offset: int, order_by: str = 'id',
+                         order_acs: bool = True) -> Tuple[str, tuple]:
+        return (
+            f'''SELECT id AS "ID"
+            applicant.last_name | ' ' | applicant.first_name |
+            ' ' | applicant.middle_name AS "Соискатель",
+            specialization.name AS "Специальность",
+            work_experience AS "Стаж работы"
+            JOIN applicant ON applicant.id = applicant_id
+            JOIN specialization ON specialization.id = specialization_id
+            FROM {self.table_name} '''
+            f'''ORDER BY {order_by} {'ASC' if order_acs else 'DESC'} '''
+            f'''LIMIT %s OFFSET %s''',
+            (limit, offset))
+
 
 class EducationalInstitutionApplicantRepository(BaseRepository):
     table_name = "educational_institution_applicant"
@@ -151,3 +244,31 @@ class EducationalInstitutionApplicantRepository(BaseRepository):
                 educational_institution_applicant.id,
             ),
         )
+
+    @BaseRepository.fetch_results_with_head
+    def select(self, limit: int, offset: int, order_by: str = 'id',
+               order_acs: bool = True) -> Tuple[str, tuple]:
+        return (
+            f'''SELECT id AS "ID",
+            applicant_id AS "ID Соискатель",
+            educational_institution_id AS "ID Учебное заведение"
+            FROM {self.table_name} '''
+            f'''ORDER BY {order_by} {'ASC' if order_acs else 'DESC'} '''
+            f'''LIMIT %s OFFSET %s''',
+            (limit, offset))
+
+    @BaseRepository.fetch_results_with_head
+    def select_with_join(self, limit: int, offset: int, order_by: str = 'id',
+                         order_acs: bool = True) -> Tuple[str, tuple]:
+        return (
+            f'''SELECT id AS "ID"
+            applicant.last_name | ' ' | applicant.first_name |
+            ' ' | applicant.middle_name AS "Соискатель",
+            educational_institution.name AS "Учебное заведение"
+            JOIN applicant ON applicant.id = applicant_id
+            JOIN educational_institution ON educational_institution.id =
+            educational_institution_id
+            FROM {self.table_name} '''
+            f'''ORDER BY {order_by} {'ASC' if order_acs else 'DESC'} '''
+            f'''LIMIT %s OFFSET %s''',
+            (limit, offset))

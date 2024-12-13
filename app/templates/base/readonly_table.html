@@ -6,8 +6,6 @@
         <option value="15" {% if records_per_page == 15 %}selected{% endif %}>15</option>
         <option value="20" {% if records_per_page == 20 %}selected{% endif %}>20</option>
     </select>
-    <button onclick="toggleEditMode()">Переключить режим</button>
-    <span id="mode-text">Режим просмотра</span>
 </div>
 <div class="pagination">
     {% if current_page > 1 %}
@@ -42,17 +40,10 @@
     <tbody>
         {% for entry in data[1:] %}
         <tr>
-            <td><button class="delete-row">Удалить</button></td>
-            {% for i in range(entry|length) %}
-                {% if i == 0 %}
-                    <td>{{ entry.0 }}</td>
-                {% else %}
-                    <td><input class="editable" type="text" value="{{ entry[i] }}" disabled></td>
-                {% endif%}
+            {% for value in entry %}
+                <td>{{ value }}</td>
             {% endfor %}
         </tr>
         {% endfor %}
     </tbody>
 </table>
-<button id="add-row">Добавить строку</button>
-<button onclick="saveData()">Сохранить изменения</button>

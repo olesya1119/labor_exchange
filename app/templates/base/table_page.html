@@ -1,0 +1,21 @@
+{% block content %} 
+    <h1>{{active_page.name}}</h1>
+    
+    <div class="view-mode-switch">
+        {% if request.args.get('view_mode', 'readonly') == 'readonly' %}
+            <a href="?view_mode=editable{% for key, value in request.args.items() if key != 'view_mode' %}&{{ key }}={{ value }}{% endfor %}">
+                <button>Переключиться на Editable таблицу</button>
+            </a>
+        {% else %}
+            <a href="?view_mode=readonly{% for key, value in request.args.items() if key != 'view_mode' %}&{{ key }}={{ value }}{% endfor %}">
+                <button>Переключиться на Read-Only таблицу</button>
+            </a>
+        {% endif %}
+    </div>
+
+    {% if request.args.get('view_mode', 'readonly') == 'editable' %}
+        {% include "base/editable_table.html" %}
+    {% else %}
+        {% include "base/readonly_table.html" %}
+    {% endif %}
+{% endblock content %}

@@ -48,25 +48,25 @@ class BaseService:
                  ) -> None:
         self.limit = limit
         self.offset = offset
-        self.order_by = 'id'
+        self.order_by = 0
         self.acs = True
+        self.filter = ''
         self.__repository = repository
         self.__Model = Model
 
     def set_page(self, page: int) -> None:
         '''Установаить страницу'''
-        if page >= self.get_count_pages():
-            self.offset = self.__repository.get_count()[0][0] - self.limit
+        if page > self.get_count_pages():
+            self.offset = self.limit
         else:
             self.offset = self.limit * (page - 1)
+        print(self.offset, self.limit)
         if self.offset < 0:
             self.offset = 0
 
     def set_limit(self, limit: int) -> None:
         '''Обновить значение переменной limit'''
         self.limit = limit
-
-    def reset_offset(self) -> None:
         self.offset = 0
 
     def update_table(self, data: dict) -> None:
@@ -82,7 +82,10 @@ class BaseService:
 
     def get_count_pages(self) -> int:
         '''Получить общее количество страниц'''
-        count_entry = self.__repository.get_count()[0][0]
+        count_entry = len(self.__repository.select_with_join(None, 0,
+                                                             self.order_by,
+                                                             self.acs,
+                                                             self.filter)) - 1
         count_page = count_entry // self.limit
         if count_entry % self.limit != 0:
             count_page += 1
@@ -92,14 +95,23 @@ class BaseService:
         '''Получить номер текущей страницы'''
         return self.offset // self.limit + 1
 
-    def get_table(self) -> dict:
+    def get_table(self, view_mode: str = 'readonly') -> dict:
         '''Получить данные таблицы'''
-        return self.__repository.select(self.limit, self.offset,
-                                        self.order_by, self.acs)
+        if view_mode == 'editable':
+            return self.__repository.select(self.limit, self.offset,
+                                            self.order_by, self.acs,
+                                            self.filter)
+        else:
+            return self.__repository.select_with_join(self.limit, self.offset,
+                                                      self.order_by, self.acs,
+                                                      self.filter)
 
-    def set_sort(self, order_by: str, acs: bool) -> None:
+    def set_sort(self, order_by: int, acs: bool) -> None:
         self.order_by = order_by
         self.acs = acs
+
+    def set_filter(self, filter: str) -> None:
+        self.filter = filter
 
     def delete_entry(self, id: int):
         '''Получить данные из таблицы'''

@@ -34,30 +34,43 @@ class TableRoutes():
         def render_table():
             pages = get_menu_by_id(current_user.get_id())
             '''Рендер страницы с таблицой'''
-
+            view_mode = request.args.get('view_mode', 'readonly')
             # Количество строк в таблице
-            records_per_page = int(request.args.get('records_per_page', 10))
+            try:
+                records_per_page = int(request.args.get('records_per_page',
+                                                        10))
+            except ValueError:
+                records_per_page = 10
             # Параметры сортировки
             sort_by = request.args.get('sort_by', default=0, type=int)
             sort_dir = request.args.get('sort_dir', default='True', type=str)
 
+            search_query = request.args.get('search_query', '')
             # Номер страницы
-            page = int(request.args.get('page', 1))
+            try:
+                page = int(request.args.get('page', 1))
+            except ValueError:
+                page = 1
             # Обновляем класс - сервис
             self.service.set_limit(records_per_page)
             self.service.set_page(page)
             self.service.set_sort(sort_by, True if
                                   sort_dir == 'True' else False)
+            self.service.set_filter(search_query)
+            print(search_query)
 
             return render_template(
                 f"{self.template_folder}/{self.app_name}.html",
                 active_page=get_activ_page(pages,
                                            f"{self.app_name}.render_table"),
                 pages=pages,
-                data=self.service.get_table(),
+                data=self.service.get_table(view_mode),
                 records_per_page=records_per_page,
                 current_page=page,
-                total_pages=self.service.get_count_pages()
+                total_pages=self.service.get_count_pages(),
+                search_query=search_query,  # Передаем текущий поисковый запрос
+                sort_by=sort_by,            # Передаем текущую сортировку
+                sort_dir=sort_dir           # Передаем направление сортировки
             )
 
         @self.blueprint.route("/delete/<int:id>", methods=["DELETE"])

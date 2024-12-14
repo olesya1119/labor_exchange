@@ -86,7 +86,7 @@ class ApplicantRepository(BaseRepository):
 
     @BaseRepository.fetch_results_with_head
     def select(self, limit: int, offset: int, order_by: int = 0,
-               order_acs: bool = True) -> Tuple[str, tuple]:
+               order_acs: bool = True, mask: str = '') -> Tuple[str, tuple]:
         title = ['id', 'last_name', 'first_name', 'middle_name', 'age',
                  'passport_number', 'passport_issue_date',
                  'passport_issued_by', 'city_id', 'street_id',
@@ -110,16 +110,17 @@ class ApplicantRepository(BaseRepository):
             registration_date AS "Дата постановки на учет",
             allowance_id AS "ID Пособие"
             FROM {self.table_name}
+            {self._get_where_querry(title)}
             ORDER BY {title[order_by]} {'ASC' if order_acs else 'DESC'}
             LIMIT %s OFFSET %s
             ''',
-            (limit, offset),
+            (f'%{mask}%', limit, offset, ),
         )
 
     @BaseRepository.fetch_results_with_head
     def select_with_join(self, limit: int, offset: int,
-                         order_by: int = 0, order_acs: bool = True
-                         ) -> Tuple[str, tuple]:
+                         order_by: int = 0, order_acs: bool = True,
+                         mask: str = '') -> Tuple[str, tuple]:
         title = ['applicant.id', 'last_name', 'first_name', 'middle_name',
                  'age', 'passport_number', 'passport_issue_date',
                  'passport_issued_by',
@@ -149,10 +150,11 @@ class ApplicantRepository(BaseRepository):
             LEFT JOIN education_document ON education_document.id =
             education_document_id
             LEFT JOIN allowance ON allowance.id = allowance_id
+            {self._get_where_querry(title)}
             ORDER BY {title[order_by]} {'ASC' if order_acs else 'DESC'}
             LIMIT %s OFFSET %s
             ''',
-            (limit, offset),
+            (f'%{mask}%', limit, offset, ),
         )
 
 
@@ -192,7 +194,7 @@ class SpecializationApplicantRepository(BaseRepository):
 
     @BaseRepository.fetch_results_with_head
     def select(self, limit: int, offset: int, order_by: int = 0,
-               order_acs: bool = True) -> Tuple[str, tuple]:
+               order_acs: bool = True, mask: str = '') -> Tuple[str, tuple]:
         title = ['id', 'applicant_id', 'specialization_id', 'work_experience']
 
         return (
@@ -201,13 +203,15 @@ class SpecializationApplicantRepository(BaseRepository):
             specialization_id AS "ID Специальность",
             work_experience AS "Стаж работы"
             FROM {self.table_name}
+            {self._get_where_querry(title)}
             ORDER BY {title[order_by]} {'ASC' if order_acs else 'DESC'}
             LIMIT %s OFFSET %s''',
-            (limit, offset))
+            (f'%{mask}%', limit, offset, ))
 
     @BaseRepository.fetch_results_with_head
     def select_with_join(self, limit: int, offset: int, order_by: int = 0,
-                         order_acs: bool = True) -> Tuple[str, tuple]:
+                         order_acs: bool = True, mask: str = ''
+                         ) -> Tuple[str, tuple]:
         title = ['specialization_applicant.id',
                  'applicant.last_name, applicant.first_name, '
                  'applicant.middle_name', 'specialization.name',
@@ -219,12 +223,13 @@ class SpecializationApplicantRepository(BaseRepository):
             ' ' | applicant.middle_name AS "Соискатель",
             specialization.name AS "Специальность",
             work_experience AS "Стаж работы"
+            FROM {self.table_name}
             JOIN applicant ON applicant.id = applicant_id
             JOIN specialization ON specialization.id = specialization_id
-            FROM {self.table_name}
+            {self._get_where_querry(title)}
             ORDER BY {title[order_by]} {'ASC' if order_acs else 'DESC'}
             LIMIT %s OFFSET %s''',
-            (limit, offset))
+            (f'%{mask}%', limit, offset, ))
 
 
 class EducationalInstitutionApplicantRepository(BaseRepository):
@@ -261,7 +266,7 @@ class EducationalInstitutionApplicantRepository(BaseRepository):
 
     @BaseRepository.fetch_results_with_head
     def select(self, limit: int, offset: int, order_by: int = 0,
-               order_acs: bool = True) -> Tuple[str, tuple]:
+               order_acs: bool = True, mask: str = '') -> Tuple[str, tuple]:
         title = ['id', 'applicant_id', 'educational_institution_id']
 
         return (
@@ -269,13 +274,15 @@ class EducationalInstitutionApplicantRepository(BaseRepository):
             applicant_id AS "ID Соискатель",
             educational_institution_id AS "ID Учебное заведение"
             FROM {self.table_name}
+            {self._get_where_querry(title)}
             ORDER BY {title[order_by]} {'ASC' if order_acs else 'DESC'}
             LIMIT %s OFFSET %s''',
-            (limit, offset))
+            (f'%{mask}%', limit, offset, ))
 
     @BaseRepository.fetch_results_with_head
     def select_with_join(self, limit: int, offset: int, order_by: int = 0,
-                         order_acs: bool = True) -> Tuple[str, tuple]:
+                         order_acs: bool = True, mask: str = ''
+                         ) -> Tuple[str, tuple]:
         title = ['educational_institution_applicant.id',
                  'applicant.last_name, applicant.first_name, '
                  'applicant.middle_name', 'educational_institution.name']
@@ -285,10 +292,11 @@ class EducationalInstitutionApplicantRepository(BaseRepository):
             applicant.last_name | ' ' | applicant.first_name |
             ' ' | applicant.middle_name AS "Соискатель",
             educational_institution.name AS "Учебное заведение"
+            FROM {self.table_name}
             JOIN applicant ON applicant.id = applicant_id
             JOIN educational_institution ON educational_institution.id =
             educational_institution_id
-            FROM {self.table_name}
+            {self._get_where_querry(title)}
             ORDER BY {title[order_by]} {'ASC' if order_acs else 'DESC'}
             LIMIT %s OFFSET %s''',
-            (limit, offset))
+            (f'%{mask}%', limit, offset, ))

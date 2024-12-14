@@ -31,20 +31,21 @@ class SpecializationRepository(BaseRepository):
 
     @BaseRepository.fetch_results_with_head
     def select(self, limit: int, offset: int, order_by: int = 0,
-               order_acs: bool = True) -> Tuple[str, tuple]:
+               order_acs: bool = True, mask: str = '') -> Tuple[str, tuple]:
         title = ['id', 'name']
 
         return (
             f'''SELECT id AS "ID",
             name AS "Название специализации"
             FROM {self.table_name}
+            {self._get_where_querry(title)}
             ORDER BY {title[order_by]} {'ASC' if order_acs else 'DESC'}
             LIMIT %s OFFSET %s''',
-            (limit, offset))
+            (f'%{mask}%', limit, offset, ))
 
     def select_with_join(self, limit: int, offset: int, order_by: int = 0,
-                         order_acs: bool = True):
-        self.select(self, limit, offset, order_by, order_acs)
+                         order_acs: bool = True, mask: str = ''):
+        return self.select(limit, offset, order_by, order_acs, mask)
 
 
 class AllowanceRepository(BaseRepository):
@@ -74,20 +75,21 @@ class AllowanceRepository(BaseRepository):
 
     @BaseRepository.fetch_results_with_head
     def select(self, limit: int, offset: int, order_by: int = 0,
-               order_acs: bool = True) -> Tuple[str, tuple]:
+               order_acs: bool = True, mask: str = '') -> Tuple[str, tuple]:
         title = ['id', 'amount']
 
         return (
             f'''SELECT id AS "ID",
             amount AS "Размер пособия"
             FROM {self.table_name}
+            {self._get_where_querry(title)}
             ORDER BY {title[order_by]} {'ASC' if order_acs else 'DESC'}
             LIMIT %s OFFSET %s''',
-            (limit, offset))
+            (f'%{mask}%', limit, offset, ))
 
     def select_with_join(self, limit: int, offset: int, order_by: int = 0,
-                         order_acs: bool = True):
-        self.select(self, limit, offset, order_by, order_acs)
+                         order_acs: bool = True, mask: str = ''):
+        return self.select(limit, offset, order_by, order_acs, mask)
 
 
 class ApplicantRequirementsRepository(BaseRepository):
@@ -119,20 +121,21 @@ class ApplicantRequirementsRepository(BaseRepository):
 
     @BaseRepository.fetch_results_with_head
     def select(self, limit: int, offset: int, order_by: int = 0,
-               order_acs: bool = True) -> Tuple[str, tuple]:
+               order_acs: bool = True, mask: str = '') -> Tuple[str, tuple]:
         title = ['id', 'name']
 
         return (
             f'''SELECT id AS "ID",
             name AS "Требование к соискателю"
             FROM {self.table_name}
+            {self._get_where_querry(title)}
             ORDER BY {title[order_by]} {'ASC' if order_acs else 'DESC'}
             LIMIT %s OFFSET %s''',
-            (limit, offset))
+            (f'%{mask}%', limit, offset, ))
 
     def select_with_join(self, limit: int, offset: int, order_by: int = 0,
-                         order_acs: bool = True):
-        self.select(self, limit, offset, order_by, order_acs)
+                         order_acs: bool = True, mask: str = ''):
+        return self.select(limit, offset, order_by, order_acs, mask)
 
 
 class FieldOfActivityRepository(BaseRepository):
@@ -162,17 +165,18 @@ class FieldOfActivityRepository(BaseRepository):
 
     @BaseRepository.fetch_results_with_head
     def select(self, limit: int, offset: int, order_by: int = 0,
-               order_acs: bool = True) -> Tuple[str, tuple]:
+               order_acs: bool = True, mask: str = '') -> Tuple[str, tuple]:
         title = ['id', 'name']
 
         return (
             f'''SELECT id AS "ID",
             name AS "Название сферы деятельности"
             FROM {self.table_name}
+            {self._get_where_querry(title)}
             ORDER BY {title[order_by]} {'ASC' if order_acs else 'DESC'}
             LIMIT %s OFFSET %s''',
-            (limit, offset))
+            (f'%{mask}%', limit, offset, ))
 
     def select_with_join(self, limit: int, offset: int, order_by: int = 0,
-                         order_acs: bool = True):
-        self.select(self, limit, offset, order_by, order_acs)
+                         order_acs: bool = True, mask: str = ''):
+        return self.select(limit, offset, order_by, order_acs, mask)

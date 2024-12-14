@@ -41,6 +41,7 @@ class BaseRepository():
         def wrapper(*args, **kwargs):
             cursor = get_db_connection().cursor()
             query, values = func(*args, **kwargs)
+            print(query, values)
             try:
                 cursor.execute(query, values)
                 # Получение названий столбцов
@@ -114,20 +115,28 @@ class BaseRepository():
 
     @fetch_results_with_head
     def select(self, limit: int, offset: int, order_by: int = 0,
-               order_acs: bool = True) -> Tuple[str, tuple]:
+               order_acs: bool = True, mask: str = '') -> Tuple[str, tuple]:
         return (
             f'''SELECT *
             FROM {self.table_name} '''
             f'''ORDER BY id {'ASC' if order_acs else 'DESC'} '''
             f'''LIMIT %s OFFSET %s''',
-            (limit, offset))
+            (limit, offset, ))
 
     @fetch_results_with_head
     def select_with_join(self, limit: int, offset: int, order_by: int = 0,
-                         order_acs: bool = True) -> Tuple[str, tuple]:
+                         order_acs: bool = True, mask: str = ''
+                         ) -> Tuple[str, tuple]:
         return (
             f'''SELECT *
             FROM {self.table_name} '''
             f'''ORDER BY {order_by} {'ASC' if order_acs else 'DESC'} '''
             f'''LIMIT %s OFFSET %s''',
-            (limit, offset))
+            (limit, offset, ))
+
+    def _get_where_querry(self, title: list):
+        where_querry = "WHERE LOWER(CONCAT_WS(' ', "
+        for name in title:
+            where_querry += f"{name}, "
+        where_querry = where_querry[:-2] + ')) LIKE LOWER(%s)'
+        return where_querry

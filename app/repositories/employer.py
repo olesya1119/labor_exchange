@@ -43,7 +43,7 @@ class EmployerRepository(BaseRepository):
 
     @BaseRepository.fetch_results_with_head
     def select(self, limit: int, offset: int, order_by: int = 0,
-               order_acs: bool = True) -> Tuple[str, tuple]:
+               order_acs: bool = True, mask: str = '') -> Tuple[str, tuple]:
         title = ['id', 'name', 'city_id', 'street_id', 'house_number',
                  'phone_number']
 
@@ -55,25 +55,28 @@ class EmployerRepository(BaseRepository):
             house_number AS "Номер дома",
             phone_number AS "Номер телефона"
             FROM {self.table_name}
+            {self._get_where_querry(title)}
             ORDER BY {title[order_by]} {'ASC' if order_acs else 'DESC'}
             LIMIT %s OFFSET %s''',
-            (limit, offset))
+            (f'%{mask}%', limit, offset, ))
 
     @BaseRepository.fetch_results_with_head
     def select_with_join(self, limit: int, offset: int, order_by: int = 0,
-                         order_acs: bool = True) -> Tuple[str, tuple]:
-        title = ['employer.id', 'name', 'city.name, street.name, house_number',
-                 'phone_number']
+                         order_acs: bool = True, mask: str = ''
+                         ) -> Tuple[str, tuple]:
+        title = ['employer.id', 'employer.name', 'city.name, street.name, '
+                 'house_number', 'phone_number']
 
         return (
             f'''SELECT employer.id AS "ID",
-            name AS "Название",
+            employer.name AS "Название",
             'г. ' || city.name || ', ул. ' || street.name || ', д. '
             || house_number AS Адрес,
             phone_number AS "Номер телефона"
             FROM {self.table_name}
             LEFT JOIN city ON city_id = city.id
             LEFT JOIN street ON street_id = street.id
+            {self._get_where_querry(title)}
             ORDER BY {title[order_by]} {'ASC' if order_acs else 'DESC'}
             LIMIT %s OFFSET %s''',
-            (limit, offset))
+            (f'%{mask}%', limit, offset, ))

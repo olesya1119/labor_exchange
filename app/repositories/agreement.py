@@ -32,8 +32,9 @@ class AgreementRepository(BaseRepository):
 
     @BaseRepository.fetch_results_with_head
     def select(self, limit: int, offset: int, order_by: int = 0,
-               order_acs: bool = True) -> Tuple[str, tuple]:
+               order_acs: bool = True, mask: str = '') -> Tuple[str, tuple]:
         title = ['id', 'applicant_id', 'vacancy_id', 'signature_date']
+        where_querry = f"WHERE CONCAT_WS(' ', {', '.join(title)}) LIKE %%s%"
 
         return (
             f'''SELECT id AS "ID",
@@ -41,13 +42,16 @@ class AgreementRepository(BaseRepository):
             vacancy_id AS "ID Вакансия",
             signature_date AS "Дата подписания"
             FROM {self.table_name}
+            {self._get_where_querry(title)}
+            {where_querry}
             ORDER BY {title[order_by]} {'ASC' if order_acs else 'DESC'}
             LIMIT %s OFFSET %s''',
-            (limit, offset))
+            (f'%{mask}%', limit, offset, ))
 
     @BaseRepository.fetch_results_with_head
     def select_with_join(self, limit: int, offset: int, order_by: int = 0,
-                         order_acs: bool = True) -> Tuple[str, tuple]:
+                         order_acs: bool = True, mask: str = ''
+                         ) -> Tuple[str, tuple]:
         title = ['agreement.id', 'applicant.last_name, applicant.first_name, '
                  'applicant.middle_name', 'vacancy.position_title',
                  'signature_date']
@@ -57,9 +61,10 @@ class AgreementRepository(BaseRepository):
             ' ' | applicant.middle_name AS "Соискатель",
             vacancy.position_title AS "Вакансия",
             signature_date AS "Дата подписания"
+            FROM {self.table_name}
             LEFT JOIN applicant ON applicant.id = applicant_id
             LEFT JOIN vacancy ON vacancy.id = vacancy_id
-            FROM {self.table_name}
+            {self._get_where_querry(title)}
             ORDER BY {title[order_by]} {'ASC' if order_acs else 'DESC'}
             LIMIT %s OFFSET %s''',
-            (limit, offset))
+            (f'%{mask}%', limit, offset, ))

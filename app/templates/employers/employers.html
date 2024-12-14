@@ -1,15 +1,5 @@
-{# templates/employers.html #}
-
 {% extends "base/base.html" %}
 
-{% block link %} 
-{% endblock link %}
-
 {% block content %} 
-    <h1>Список работодателей</h1>
-    {% include "base/table.html" %}
+{% include "base/table_page.html" %}
 {% endblock content %}
-
-{% block script %} 
-    <script src="{{ url_for('static', filename='js/table.js') }}"></script>
-{% endblock script %}

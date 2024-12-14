@@ -8,10 +8,31 @@ function toggleEditMode() {
     modeText.innerText = isEditMode ? 'Режим редактирования' : 'Режим просмотра';
 }
 
-function changeRecordsPerPage(select) {
-    const value = select.value;
-    window.location.href = `?records_per_page=${value}`
-};
+function changeRecordsPerPage(selectElement) {
+    // Получаем текущий URL и параметры
+    const url = new URL(window.location.href);
+
+    // Обновляем параметр records_per_page
+    url.searchParams.set('records_per_page', selectElement.value);
+
+    // Оставляем остальные параметры (sort_by, sort_dir, search_query, page)
+    const paramsToKeep = ['sort_by', 'sort_dir', 'search_query', 'page'];
+    const defaultParams = {
+        sort_by: '1',
+        page: '1',
+        sort_dir: 'True',
+        search_query: ''
+    };
+    
+    paramsToKeep.forEach(param => {
+        if (!url.searchParams.has(param)) {
+            url.searchParams.set(param, defaultParams[param] || '');  // Используем значение из объекта
+        }
+    });
+
+    // Перенаправляем на обновленный URL
+    window.location.href = url.toString()
+}
 
 function saveData() {
     const rows = document.querySelectorAll('#table tbody tr');

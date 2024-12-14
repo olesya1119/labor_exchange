@@ -1,0 +1,101 @@
+/* Устанавливаем фон и выравнивание */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Anonymous_Pro, sans-serif;
+    background-color: #f9f3e9; /* Бежевый фон */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+/* Контейнер формы */
+.auth-container {
+    width: 100%;
+    max-width: 400px;
+    background-color: #fff; /* Белый фон формы */
+    border-radius: 10px; /* Скругленные углы */
+    padding: 20px 30px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Тень */
+    text-align: center;
+}
+
+/* Заголовок формы */
+.auth-title {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #252422;
+}
+
+/* Стили группы полей */
+.form-group {
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+/* Метки */
+.form-label {
+    display: block;
+    font-size: 16px;
+    margin-bottom: 5px;
+    color: #252422;
+}
+
+/* Поля ввода */
+.form-input {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #CCC5B9; /* Желтый фон для полей */
+    box-shadow: 3px 3px 4px 0 rgba(0, 0, 0, 0.4);
+    text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.25);
+    box-sizing: border-box;
+    outline: none;
+    transition: border-color 0.3s;
+}
+
+/* Поля ввода при фокусе */
+.form-input:focus {
+    border-color: #E98964;
+    text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.25);
+}
+
+/* Кнопка */
+.btn {
+    display: inline-block;
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    color: #fff;
+    background-color: #CCC5B9; /* Синий цвет кнопки */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+/* Кнопка при наведении */
+.btn:hover {
+    background-color: #E98964;
+}
+
+/* Текст ссылки на регистрацию */
+.auth-register {
+    margin-top: 15px;
+    font-size: 14px;
+    color: #555;
+}
+
+/* Ссылка на регистрацию */
+.auth-link {
+    color: #E98964;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.auth-link:hover {
+    text-decoration: underline;
+}

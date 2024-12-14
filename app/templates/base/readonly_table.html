@@ -1,4 +1,19 @@
-<div class="controls">
+<div class="search-bar">
+    <form id="search-form" method="get" action="">
+        <div class="search-input-container">
+            <input
+                type="text"
+                name="search_query"
+                placeholder="Поиск по таблице..."
+                value="{{ search_query|default('') }}"
+            />
+            <button type="submit" onclick="updateSearchQuery(event)">🔍</button>
+        </div>
+    </form>
+</div>
+
+
+<div class="pagination">
     <label for="records-per-page">Записей на странице:</label>
     <select id="records-per-page" onchange="changeRecordsPerPage(this)">
         <option value="5" {% if records_per_page == 5 %}selected{% endif %}>5</option>
@@ -6,37 +21,25 @@
         <option value="15" {% if records_per_page == 15 %}selected{% endif %}>15</option>
         <option value="20" {% if records_per_page == 20 %}selected{% endif %}>20</option>
     </select>
-</div>
-<!-- Добавляем поисковую строку -->
-<div class="search-bar">
-    <form method="get" action="">
-        <input 
-            type="text" 
-            name="search_query" 
-            placeholder="Поиск по таблице..." 
-            value="{{ search_query|default('') }}" 
-        />
-        <button type="submit">Искать</button>
-    </form>
-</div>
-<div class="pagination">
+    <label for="records-per-page">Страница:</label>
     {% for i in range(1, total_pages + 1) %}
-        <a href="?page={{ i }}&sort_dir={{ sort_dir }}&records_per_page={{ records_per_page }}&search_query={{ search_query }}&sort_by={{ sort_by }}"
+        <a href="?page={{ i }}&sort_dir={{ sort_dir }}&records_per_page={{ records_per_page }}&search_query={{ search_query }}&sort_by={{ sort_by }}&view_mode={{ view_mode }}"
            {% if i == current_page %}class="active"{% endif %}>
             {{ i }}
         </a>
     {% endfor %}
 </div>
+
 <table id="table" class="view-mode">
     <thead>
         <tr>
             {% for title in data.0 %}
             <th>
                 {{ title }} <br>
-                <a href="?sort_by={{ loop.index0 }}&sort_dir=True&records_per_page={{ records_per_page }}&search_query={{ search_query }}&page={{ current_page }}">
+                <a href="?sort_by={{ loop.index0 }}&sort_dir=True&records_per_page={{ records_per_page }}&search_query={{ search_query }}&page={{ current_page }}&view_mode={{ view_mode }}">
                     ▲
                 </a>
-                <a href="?sort_by={{ loop.index0 }}&sort_dir=False&records_per_page={{ records_per_page }}&search_query={{ search_query }}&page={{ current_page }}">
+                <a href="?sort_by={{ loop.index0 }}&sort_dir=False&records_per_page={{ records_per_page }}&search_query={{ search_query }}&page={{ current_page }}&view_mode={{ view_mode }}">
                     ▼
                 </a>
                 {% if current_sort_by == loop.index0 %}

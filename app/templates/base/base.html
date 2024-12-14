@@ -9,23 +9,20 @@
     
     <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/navigate.css') }}">
-    {% block link %} 
-        
-    {% endblock link %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/table.css') }}">
+    
+
 </head>
 <body>
     {% include "base/navigate.html" %}
     <main>
         {% block content %} 
-            Главная страница 
-            <a href="{{ url_for('home.logout') }}">
-                Выход
-            </a> 
+            Главная страница  
         {% endblock content %}
+        <a href="{{ url_for('home.logout') }}" class="loginout">
+            Выход
+        </a>
     </main>
-
-    {% block script %} 
-        
-    {% endblock script %}
+    <script src="{{url_for('static', filename='js/table.js')}}"></script>
 </body>
 </html>

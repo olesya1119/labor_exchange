@@ -57,7 +57,6 @@ class TableRoutes():
             self.service.set_sort(sort_by, True if
                                   sort_dir == 'True' else False)
             self.service.set_filter(search_query)
-            print(search_query)
 
             return render_template(
                 f"{self.template_folder}/{self.app_name}.html",
@@ -70,7 +69,8 @@ class TableRoutes():
                 total_pages=self.service.get_count_pages(),
                 search_query=search_query,  # Передаем текущий поисковый запрос
                 sort_by=sort_by,            # Передаем текущую сортировку
-                sort_dir=sort_dir           # Передаем направление сортировки
+                sort_dir=sort_dir,          # Передаем направление сортировки
+                view_mode=view_mode
             )
 
         @self.blueprint.route("/delete/<int:id>", methods=["DELETE"])

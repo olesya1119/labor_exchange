@@ -31,3 +31,22 @@ main .container {
     margin: 0 auto; /* Убирает возможное смещение */
     text-align: center;
 }
+
+.loginout {
+    display: inline-block;
+    box-sizing: border-box;
+    padding: 10px;
+    border: none;
+    border-radius: 35px;
+    font-size: 20px;
+    color: #252422;
+    text-overflow: ellipsis;
+    text-decoration: none; /* Убирает подчеркивание */
+    background: #CCC5B9;
+    box-shadow: 3px 3px 4px 0 rgba(0, 0, 0, 0.4);
+    text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.25);
+    margin: 20px;
+    width: 150px;
+    text-align: center;
+    float: right; /* Элемент будет выравниваться по правому краю */
+}

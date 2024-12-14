@@ -60,7 +60,6 @@ class BaseService:
             self.offset = self.limit
         else:
             self.offset = self.limit * (page - 1)
-        print(self.offset, self.limit)
         if self.offset < 0:
             self.offset = 0
 

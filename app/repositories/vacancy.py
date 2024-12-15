@@ -143,7 +143,7 @@ class VacancyApplicantRequirementsRepository(BaseRepository):
                  'applicant_requirements.name', 'vacancy.position_title']
 
         return (
-            f'''SELECT vacancy_applicant_requirements.id AS "ID"
+            f'''SELECT vacancy_applicant_requirements.id AS "ID",
             applicant_requirements.name AS "Требования к соискателю",
             vacancy.position_title AS "Вакансия"
             FROM {self.table_name}
@@ -210,7 +210,7 @@ class VacancyFieldOfActivityRepository(BaseRepository):
                  'field_of_activity.name', 'vacancy.position_title']
 
         return (
-            f'''SELECT vacancy_field_of_activity.id AS "ID"
+            f'''SELECT vacancy_field_of_activity.id AS "ID",
             field_of_activity.name AS "Сферы деятельности",
             vacancy.position_title AS "Вакансия"
             FROM {self.table_name}

@@ -160,7 +160,7 @@ CREATE TABLE vacancy_field_of_activity(
 
 CREATE TABLE menu(
     id SERIAL PRIMARY KEY,
-    parent_id INTEGER NOT NULL,
+    id_parent INTEGER NOT NULL,
     name VARCHAR(50) NOT NULL,
     function_name VARCHAR(50) NOT NULL,
     menu_order INTEGER NOT NULL
@@ -174,8 +174,8 @@ CREATE TABLE app_user(
 
 CREATE TABLE user_rights(
     id SERIAL PRIMARY KEY,
-    app_user_id INTEGER NOT NULL,
-    menu_id INTEGER NOT NULL,
+    id_app_user INTEGER NOT NULL,
+    id_menu INTEGER NOT NULL,
     r BOOLEAN NOT NULL,
     w BOOLEAN NOT NULL,
     e BOOLEAN NOT NULL,
@@ -185,4 +185,24 @@ CREATE TABLE user_rights(
 );
 
 
+-- Создание функции, которая будет вызываться триггером
+CREATE OR REPLACE FUNCTION add_default_user_rights()
+RETURNS TRIGGER AS $$
+BEGIN
+    -- Добавляем права для всех существующих пунктов меню
+    INSERT INTO user_rights (id_app_user, id_menu, r, w, e, d)
+    SELECT NEW.id, m.id, 
+           CASE WHEN m.id IN (1, 2, 3, 4, 5, 6, 8, 9, 11, 12, 13, 14, 15, 16, 17, 18, 19, 25, 26, 27) THEN TRUE ELSE FALSE END, 
+           FALSE, FALSE, FALSE
+    FROM menu m;
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Создание триггера на таблицу app_user
+CREATE TRIGGER after_app_user_insert
+AFTER INSERT ON app_user
+FOR EACH ROW
+EXECUTE FUNCTION add_default_user_rights();
 

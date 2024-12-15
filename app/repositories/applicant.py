@@ -218,9 +218,9 @@ class SpecializationApplicantRepository(BaseRepository):
                  'work_experience']
 
         return (
-            f'''SELECT id AS "ID"
-            applicant.last_name | ' ' | applicant.first_name |
-            ' ' | applicant.middle_name AS "Соискатель",
+            f'''SELECT specialization_applicant.id AS "ID",
+            applicant.last_name || ' ' || applicant.first_name ||
+            ' ' || applicant.middle_name AS "Соискатель",
             specialization.name AS "Специальность",
             work_experience AS "Стаж работы"
             FROM {self.table_name}
@@ -288,9 +288,9 @@ class EducationalInstitutionApplicantRepository(BaseRepository):
                  'applicant.middle_name', 'educational_institution.name']
 
         return (
-            f'''SELECT educational_institution_applicant.id AS "ID"
-            applicant.last_name | ' ' | applicant.first_name |
-            ' ' | applicant.middle_name AS "Соискатель",
+            f'''SELECT educational_institution_applicant.id AS "ID",
+            applicant.last_name || ' ' || applicant.first_name ||
+            ' ' || applicant.middle_name AS "Соискатель",
             educational_institution.name AS "Учебное заведение"
             FROM {self.table_name}
             JOIN applicant ON applicant.id = applicant_id

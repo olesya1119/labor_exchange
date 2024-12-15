@@ -10,16 +10,14 @@ home_blueprint = Blueprint('home', __name__, url_prefix='/',)
 home_blueprints = {'home.render_home': home_blueprint}
 
 
-# TODO: сделать отдельную страницу главной страницы.
-# TODO: сделать страницы авторизации и регистрации здесь.
-
 @home_blueprint.route("/")
 @login_required
 def render_home():
     '''Рендер главной страницы'''
     pages = get_menu_by_id(current_user.get_id())
     return render_template("home/home.html",
-                           active_page=get_activ_page(pages, 'home.home'),
+                           active_page=get_activ_page(pages,
+                                                      'home.render_home'),
                            pages=pages)
 
 
@@ -64,30 +62,3 @@ def protected():
 def logout():
     logout_user()
     return redirect(url_for('home.login'))
-
-
-@home_blueprint.route("/documents")
-@login_required
-def documents():
-    pages = get_menu_by_id(current_user.get_id())
-    return render_template("documents/documents.html",
-                           active_page=get_activ_page(pages, 'documents'),
-                           pages=pages)
-
-
-@home_blueprint.route("/help")
-@login_required
-def help():
-    pages = get_menu_by_id(current_user.get_id())
-    return render_template("help/help.html",
-                           active_page=get_activ_page(pages, 'help'),
-                           pages=pages)
-
-
-@home_blueprint.route("/various")
-@login_required
-def various():
-    pages = get_menu_by_id(current_user.get_id())
-    return render_template("various/various.html",
-                           active_page=get_activ_page(pages, 'various'),
-                           pages=pages)

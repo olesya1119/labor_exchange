@@ -4,7 +4,7 @@
         {% for page in pages %}
             {% if page.have_submenu %}
                 <div class="menu-item">
-                    <a href="#" class="navigate_link">{{ page.name }}</a>
+                    <a href="{{ url_for(page.function_name) }}" class="navigate_link">{{ page.name }}</a>
                     <div class="submenu">
                         {% for subpage in page.submenu %}
                         <a href="{{ url_for(subpage.function_name) }}" {% if subpage.function_name == active_page.function_name %} class="active_navigate_link" {% else %} class="navigate_link" {% endif %}>

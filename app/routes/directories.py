@@ -100,7 +100,7 @@ city_routes = CityRoutes()
 street_routes = StreetRoutes()
 
 directories_blueprints = {
-    'directories_blueprint.render_table': directories_blueprint,
+    'directories.render_directories': directories_blueprint,
     'specializations.render_table': specializations_routes.get_blueprint(),
     'education_level.render_table': education_level_routes.get_blueprint(),
     'educational_institution.render_table':

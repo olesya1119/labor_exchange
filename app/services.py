@@ -81,10 +81,8 @@ class BaseService:
 
     def get_count_pages(self) -> int:
         '''Получить общее количество страниц'''
-        count_entry = len(self.__repository.select_with_join(None, 0,
-                                                             self.order_by,
-                                                             self.acs,
-                                                             self.filter)) - 1
+        count_entry = len(self.__repository.select(None, 0, self.order_by,
+                                                   self.acs, self.filter)) - 1
         count_page = count_entry // self.limit
         if count_entry % self.limit != 0:
             count_page += 1

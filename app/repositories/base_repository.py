@@ -41,6 +41,7 @@ class BaseRepository():
         def wrapper(*args, **kwargs):
             cursor = get_db_connection().cursor()
             query, values = func(*args, **kwargs)
+            print(query, values)
             try:
                 cursor.execute(query, values)
                 # Получение названий столбцов

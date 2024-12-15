@@ -52,13 +52,14 @@
     <tbody>
         {% for entry in data[1:] %}
         <tr>
-            <td><button class="delete-row">🗑️</button></td>
+            
+            <td>{% if active_page.d %}<button class="delete-row">🗑️</button>{% endif %}</td>
             {% for i in range(entry|length) %}
                 {% if i == 0 %}
                     <td>{{ entry.0 }}</td>
                 {% else %}
-                    <td><input class="editable" type="text" value="{{ entry[i] }}" disabled></td>
-                {% endif %}
+                    <td><input class="editable" type="text" value="{{ entry[i] }}" disabled></td>  
+                {% endif %}  
             {% endfor %}
         </tr>
         {% endfor %}
@@ -67,8 +68,8 @@
 
 <!-- Кнопки -->
 <div class="buttons">
-    <button id="add-row">➕ Добавить запись</button>
-    <button onclick="saveData()">💾 Сохранить все</button>
-    <button onclick="toggleEditMode()">🔄 Переключить режим</button>
-    <span id="mode-text">Режим просмотра</span>
+    {% if active_page.w %}<button id="add-row">➕ Добавить запись</button>{% endif %}
+    {% if active_page.w or active_page.e %}<button onclick="saveData()">💾 Сохранить все</button>{% endif %}
+    {% if active_page.e %}<button onclick="toggleEditMode()">🔄 Переключить режим</button>
+    <span id="mode-text">Режим просмотра</span>{% endif %}
 </div>

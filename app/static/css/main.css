@@ -33,7 +33,7 @@ main .container {
 }
 
 .loginout {
-    display: inline-block;
+    display: block;
     box-sizing: border-box;
     padding: 10px;
     border: none;

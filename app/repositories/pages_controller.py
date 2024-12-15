@@ -3,13 +3,13 @@ from .db import get_db_connection
 
 def get_menu_by_id(id: int):
     cursor = get_db_connection().cursor()
-    cursor.execute('SELECT menu.id, menu.id_parent,'
-                   'menu.function_name, menu.name, user_rights.r, '
-                   'user_rights.w, user_rights.e, user_rights.d '
-                   'FROM user_rights '
-                   'LEFT JOIN menu ON menu.id = user_rights.id '
-                   'WHERE user_rights.id_app_user = %s '
-                   'ORDER BY menu.id_parent, menu.menu_order', (id,))
+    cursor.execute('''SELECT menu.id, menu.id_parent,
+                   menu.function_name, menu.name, user_rights.r,
+                   user_rights.w, user_rights.e, user_rights.d
+                   FROM user_rights
+                   LEFT JOIN menu ON menu.id = user_rights.id
+                   WHERE user_rights.id_app_user = %s AND user_rights.r = true
+                   ORDER BY menu.id_parent, menu.menu_order''', (id,))
     menu = cursor.fetchall()
     pages = []
     for menu_item in menu:

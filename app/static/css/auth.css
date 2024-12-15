@@ -99,3 +99,13 @@ body {
 .auth-link:hover {
     text-decoration: underline;
 }
+
+.flash-messages-danger{
+    color: #e66060;
+    font-weight: bold;
+}
+
+.flash-messages-success{
+    color: #A8E4A0;
+    font-weight: bold;
+}

@@ -28,9 +28,26 @@ def register():
         password = request.form['password']
         hashed_password = generate_password_hash(password)
 
-        add_user(login, hashed_password)
+        try:
+            # Проверяем, не занят ли логин
+            if get_user_id(login):
+                flash('Логин уже занят, выберите другой', 'danger')
+                return redirect(url_for('home.register'))
 
-        return redirect(url_for('home.login'))
+            if len(password) < 8:
+                flash('Длина пароля должна быть на меньше 8 симоволов!',
+                      'danger')
+                return redirect(url_for('home.register'))
+
+            # Добавляем пользователя
+            add_user(login, hashed_password)
+            flash('Регистрация успешна! Теперь вы можете войти.', 'success')
+            return redirect(url_for('home.login'))
+
+        except Exception as e:
+            flash(f'Ошибка при регистрации: {e}', 'danger')
+            return redirect(url_for('home.register'))
+
     return render_template('auth/register.html')
 
 
@@ -40,14 +57,27 @@ def login():
         login = request.form['login']
         password = request.form['password']
 
-        user_id = get_user_id(login)
-        if user_id:
+        try:
+            # Проверяем, существует ли пользователь
+            user_id = get_user_id(login)
+            if not user_id:
+                flash('Пользователь с таким логином не найден', 'danger')
+                return redirect(url_for('home.login'))
+
+            # Получаем данные пользователя и проверяем пароль
             user = get_user_by_id(user_id)
-            if check_password_hash(user.password_hash, password):
-                login_user(user)
-                return redirect(url_for('home.render_home'))
-            else:
+            if not check_password_hash(user.password_hash, password):
                 flash('Неверное имя пользователя или пароль', 'danger')
+                return redirect(url_for('home.login'))
+
+            # Успешный вход
+            login_user(user)
+            return redirect(url_for('home.render_home'))
+
+        except Exception as e:
+            flash(f'Ошибка при обработке запроса: {e}', 'danger')
+            return redirect(url_for('home.login'))
+
     return render_template('auth/login.html')
 
 

@@ -7,10 +7,11 @@ def get_menu_by_id(id: int):
                    menu.function_name, menu.name, user_rights.r,
                    user_rights.w, user_rights.e, user_rights.d
                    FROM user_rights
-                   LEFT JOIN menu ON menu.id = user_rights.id
+                   LEFT JOIN menu ON menu.id = user_rights.id_menu
                    WHERE user_rights.id_app_user = %s AND user_rights.r = true
-                   ORDER BY menu.id_parent, menu.menu_order''', (id,))
+                   ORDER BY menu.id_parent, menu.menu_order;''', (id,))
     menu = cursor.fetchall()
+    print(menu)
     pages = []
     for menu_item in menu:
         if menu_item[1] == 0:

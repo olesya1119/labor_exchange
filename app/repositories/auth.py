@@ -40,3 +40,10 @@ def add_user(login, hashed_password):
     cursor.execute("INSERT INTO app_user (login, password_hash) "
                    "VALUES (%s, %s)", (login, hashed_password))
     get_db_connection().commit()
+
+
+def update_password(user_id, new_hashed_password):
+    cursor = get_db_connection().cursor()
+    cursor.execute("UPDATE app_user SET password_hash= %s "
+                   "WHERE id = %s", (new_hashed_password, user_id))
+    get_db_connection().commit()

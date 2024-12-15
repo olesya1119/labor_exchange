@@ -32,6 +32,7 @@ main .container {
     text-align: center;
 }
 
+
 .loginout {
     display: block;
     box-sizing: border-box;
@@ -45,8 +46,66 @@ main .container {
     background: #CCC5B9;
     box-shadow: 3px 3px 4px 0 rgba(0, 0, 0, 0.4);
     text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.25);
-    margin: 20px;
     width: 150px;
     text-align: center;
-    float: right; /* Элемент будет выравниваться по правому краю */
+    transition: background-color 0.3s ease;
+    margin: 5px;
+}
+
+.loginout:hover {
+    background-color: #E98964;
+}
+/* Контейнер формы */
+.about-container {
+    width: 100%;
+    max-width: 60%;
+    background-color: #fff; /* Белый фон формы */
+    border-radius: 10px; /* Скругленные углы */
+    padding: 20px 30px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Тень */
+    text-align: left;
+}
+
+.about-body{
+    margin: 0;
+    padding: 0;
+    font-family: Anonymous_Pro, sans-serif;
+    background-color: #f9f3e9; /* Бежевый фон */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 78vh;
+}
+
+p.about{
+    font-size: 20px;
+}
+
+
+p a {
+    color: #252422;
+}
+
+p a .active {
+    font-weight: bold;
+    color: #E98964;
+}
+
+p a:hover {
+    color: #E98964;
+}
+
+ul a {
+    color: #252422;
+    text-decoration: none;
+    font-size: 20px;
+}
+
+ul a .active {
+    font-weight: bold;
+    color: #E98964;
+}
+
+ul a:hover {
+    color: #E98964;
 }

@@ -11,7 +11,6 @@ def get_menu_by_id(id: int):
                    WHERE user_rights.id_app_user = %s AND user_rights.r = true
                    ORDER BY menu.id_parent, menu.menu_order;''', (id,))
     menu = cursor.fetchall()
-    print(menu)
     pages = []
     for menu_item in menu:
         if menu_item[1] == 0:

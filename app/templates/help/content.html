@@ -1,1 +1,30 @@
 {% extends "base/base.html" %}
+{% block content %} 
+<div class='about-body'>
+<div class='about-container'>
+<h1>Оглавление</h1>
+
+<ul>
+    {% for page in pages %}
+        {% if page.have_submenu %}
+        <li>
+            <a href="{{ url_for(page.function_name) }}">{{ page.name }}</a>
+            <ul>
+                {% for subpage in page.submenu %}
+                <li>
+                    <a href="{{ url_for(subpage.function_name) }}">{{ subpage.name }}</a>
+                </li>
+                {% endfor %}
+            </ul>
+        </li>
+        {% else %}
+        <li>
+            <a href="{{ url_for(page.function_name) }}">{{ page.name }}</a>
+        </li>
+        {% endif %}
+    {% endfor %}
+</ul>
+
+</div>
+</div>
+{% endblock content %}

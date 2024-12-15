@@ -8,7 +8,7 @@
     
     <link rel="stylesheet" href="{{ url_for('static', filename='css/auth.css') }}">
 </head>
-<body>
+<body class="auth">
     <div class="auth-container">
         <h1 class="auth-title">Авторизация</h1>
         <form method="POST" action="{{ url_for('home.login') }}" class="auth-form">

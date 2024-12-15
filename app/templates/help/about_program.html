@@ -1,1 +1,18 @@
 {% extends "base/base.html" %}
+{% block content %} 
+<div class="about-body">
+<div class="about-container">
+<p class="about">
+    Работа выполнена студенткой 3-его курса АВТФ НГТУ группы АВТ-214 Бульчук Олесей в рамках программы дисциплины "Базы данных" 
+    в осеннем семестре 2024 года под руководством ассистента кафедры Автоматизированных Систем Управления Антонянца Егора Николаевича.
+</p>
+<p class="about">
+    Ссылка на репозиторий GitHub: 
+    <a href="https://github.com/olesya1119/labor_exchange" target="_blank">
+        <img src="{{ url_for('static', filename='images/github_logo.png') }}" alt="GitHub Logo" style="width: 20px; vertical-align: middle;"> 
+        Репозиторий
+    </a>
+</p>
+</div>
+</div>
+{% endblock content %}

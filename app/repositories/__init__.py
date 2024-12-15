@@ -9,7 +9,7 @@ from .specialization import SpecializationRepository, AllowanceRepository, Appli
 from .vacancy import VacancyRepository, VacancyApplicantRequirementsRepository, VacancyFieldOfActivityRepository
 from .employer import EmployerRepository
 from .base_repository import BaseRepository
-from .auth import get_user_by_id, add_user, get_user_id
+from .auth import get_user_by_id, add_user, get_user_id, update_password
 from .pages_controller import get_menu_by_id, get_activ_page
 
 #  TODO: много запросов неправильных. id не одноpначных, нет order by ..

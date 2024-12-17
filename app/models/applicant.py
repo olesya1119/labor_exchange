@@ -50,6 +50,11 @@ class Applicant(BaseModel):
             raise Exception(f'Значение номера паспорта {passport_number}'
                             ' некорректное')
 
+        if len(passport_issued_by) > 100:
+            raise Exception(f'Значение {passport_issued_by} слишком большое.'
+                            'Введите меньше 100 символов')
+        self.passport_issued_by = passport_issued_by
+
         if isinstance(passport_issue_date, str):
             try:
                 self.passport_issue_date = date.fromisoformat(

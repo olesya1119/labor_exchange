@@ -1,1 +1,32 @@
 {% extends "base/base.html" %}
+
+{% block content %}
+<div class="sql_container">
+    <h1>SQL Консоль</h1>
+    <form method="post">
+        {% if query or query == '' %}
+        <textarea name="sql_query" id="sqlInput" rows="6" style="width:100%;">{{ query }}</textarea>
+        {% else %}
+        <textarea name="sql_query" id="sqlInput" placeholder="Напишите SQL-запрос здесь..." rows="6" style="width:100%;"></textarea>
+        {% endif %}
+        <button type="submit">Исполнить запрос</button>
+        
+        {% if return_type == 'table' %}
+        <!-- Кнопка экспорта, которая будет отображаться только если результат - таблица -->
+        <a href="{{ url_for('documents.export_csv', query=query) }}" class="export_button" style="color: #E98964;">Экспортировать в CSV</a>
+        {% endif %}
+    </form>
+    
+    {% if return_type=='error' %}
+    <div style="color: red; margin-top: 10px;">{{ error }}</div>
+    {% endif %}
+
+    {% if return_type == 'table' %}
+    {% include "base/documents_table.html" %}
+    {% elif return_type == 'text' %}
+    <div style="margin-top: 20px; color: green;">
+        {{ message }}
+    </div>
+    {% endif %}
+</div>
+{% endblock content %}

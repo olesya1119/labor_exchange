@@ -77,6 +77,12 @@ main .container {
     height: 78vh;
 }
 
+.sql_container{
+    width: 98%;
+    margin: 10px;
+    border-collapse: separate;
+}
+
 p.about{
     font-size: 20px;
 }

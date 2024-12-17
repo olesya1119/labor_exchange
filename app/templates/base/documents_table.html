@@ -1,0 +1,24 @@
+<table id="table" class="view-mode">
+    <thead>
+        <tr>
+            {% for title in data.0 %}
+            <th>
+                {{ title }} 
+            </th>
+            {% endfor %}
+        </tr>
+    </thead>
+    <tbody>
+        {% for entry in data[1:] %}
+        <tr>
+            {% for i in range(entry|length) %}
+                {% if i == 0 %}
+                    <td>{{ entry.0 }}</td>
+                {% else %}
+                    <td><input class="editable" type="text" value="{{ entry[i] }}" disabled></td>
+                {% endif%}
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>

@@ -13,10 +13,22 @@ class Agreement(BaseModel):
     ):
         super().__init__(id)
 
-        self.applicant_id = int(applicant_id)
-        self.vacancy_id = int(vacancy_id)
+        try:
+            self.applicant_id = int(applicant_id)
+        except Exception:
+            raise Exception('Введен неверный для ID Соискатель: '
+                            f'{applicant_id}')
+        try:
+            self.vacancy_id = int(vacancy_id)
+        except Exception:
+            raise Exception('Введен неверный для ID Вакансия: '
+                            f'{vacancy_id}')
 
         if isinstance(signature_date, str):
-            self.signature_date = date.fromisoformat(signature_date)
+            try:
+                self.signature_date = date.fromisoformat(signature_date)
+            except Exception:
+                raise Exception('Введен неверный формат даты подписания: '
+                                f'{signature_date}')
         else:
             self.signature_date = signature_date

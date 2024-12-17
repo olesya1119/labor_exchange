@@ -27,7 +27,10 @@ INSERT INTO public.menu(
 	(24, 10, 'Соглашения', 'agreement.render_table', 5),
 	(25, 9, 'Сменить пароль', 'various.change_password', 1),
 	(26, 8, 'Содержание', 'help.content', 1),
-	(27, 8, 'О программе', 'help.about_program', 2);
+	(27, 8, 'О программе', 'help.about_program', 2),
+	(28, 7, 'Список свободных вакансий', 'documents.avalable_vacancies', 2),
+	(29, 7, 'Список соискателей без стажа работы', 'documents.no_work_experience', 2),
+	(30, 7, 'Список работодателей без вакансий', 'documents.no_vacancy', 2);
 
 
 	

@@ -12,11 +12,23 @@ class Archive(BaseModel):
         performed_by: str
     ):
         super().__init__(id)
-        self.applicant_id = int(applicant_id)
+        try:
+            self.applicant_id = int(applicant_id)
+        except Exception:
+            raise Exception('Введен неверный для ID Соискатель: '
+                            f'{applicant_id}')
 
         if isinstance(archive_date, str):
-            self.archive_date = date.fromisoformat(archive_date)
+            try:
+                self.archive_date = date.fromisoformat(archive_date)
+            except Exception:
+                raise Exception('Введен неверный формат даты перевода: '
+                                f'{archive_date}')
         else:
             self.archive_date = archive_date
+
+        if len(performed_by) > 100:
+            raise Exception(f'Значение {performed_by} слишком большое.'
+                            'Введите меньше 100 символов')
 
         self.performed_by = performed_by

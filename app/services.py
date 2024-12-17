@@ -111,8 +111,12 @@ class BaseService:
         self.filter = filter
 
     def delete_entry(self, id: int):
-        '''Получить данные из таблицы'''
-        self.__repository.delete_by_id(id)
+        try:
+            self.__repository.delete_by_id(id)
+        except Exception:
+            raise Exception('Произошла ошибка во время удаления. Вероятнее '
+                            'всего от этой записи зависимы записи в других '
+                            'таблицах')
 
 
 class ApplicantService(BaseService):

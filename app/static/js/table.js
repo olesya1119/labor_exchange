@@ -90,7 +90,6 @@ function saveData() {
                 alert("Ошибка сохранения: " + result.errors.join(', '));
             }
         })
-        /*TODO : При сохрании оно летит. Почему?? */ 
         .catch(error => alert("Произошла ошибка: " + error.message));
     });
 }
@@ -107,7 +106,7 @@ if (deleteButtons.length > 0) {
                     if (response.ok) {
                         row.remove();
                     } else {
-                        alert('Ошибка при удалении строки');
+                        alert('Произошла ошибка во время удаления. Вероятнее всего от этой записи зависимы записи в других таблицах');
                     }
                 })
                 .catch(error => console.error('Ошибка:', error));
@@ -128,7 +127,6 @@ if (addRowButton) {
         // Добавляем кнопку удаления в первую ячейку
         const deleteCell = document.createElement('td');
         const idCell = document.createElement('td');
-        deleteCell.innerHTML = '<button class="delete-row">Удалить</button>';  // добавляем кнопку удаления
         newRow.appendChild(deleteCell);
         newRow.appendChild(idCell);
 

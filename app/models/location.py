@@ -6,6 +6,9 @@ class City(BaseModel):
 
     def __init__(self, id: int, name: str) -> None:
         super().__init__(id)
+        if len(name) > 25:
+            raise Exception(f'Значение {name} слишком большое.'
+                            'Введите меньше 25 символов')
         self.name = name
 
 
@@ -14,4 +17,7 @@ class Street(BaseModel):
 
     def __init__(self, id: int, name: str) -> None:
         super().__init__(id)
+        if len(name) > 25:
+            raise Exception(f'Значение {name} слишком большое.'
+                            'Введите меньше 25 символов')
         self.name = name

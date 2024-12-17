@@ -23,6 +23,22 @@ class BaseRepository():
         return wrapper
 
     @staticmethod
+    def execute_query_without_args(func):
+        def wrapper(*args, **kwargs):
+            cursor = get_db_connection().cursor()
+            query = func(*args, **kwargs)
+            try:
+                cursor.execute(query)
+                get_db_connection().commit()
+                print(query)
+                return 'Запрос успешно выполнен! '
+            except Exception as e:
+                raise e
+            finally:
+                cursor.close()
+        return wrapper
+
+    @staticmethod
     def fetch_results(func):
         def wrapper(*args, **kwargs):
             cursor = get_db_connection().cursor()
@@ -43,6 +59,28 @@ class BaseRepository():
             query, values = func(*args, **kwargs)
             try:
                 cursor.execute(query, values)
+                # Получение названий столбцов
+                column_names = tuple(desc[0] for desc in cursor.description)
+
+                # Получение данных
+                rows = cursor.fetchall()
+
+                # Формирование результата
+                result = [column_names] + rows
+                return result
+            except Exception as e:
+                raise e
+            finally:
+                cursor.close()
+        return wrapper
+
+    @staticmethod
+    def fetch_results_with_head_without_args(func):
+        def wrapper(*args, **kwargs):
+            cursor = get_db_connection().cursor()
+            query = func(*args, **kwargs)
+            try:
+                cursor.execute(query)
                 # Получение названий столбцов
                 column_names = tuple(desc[0] for desc in cursor.description)
 
@@ -139,3 +177,11 @@ class BaseRepository():
             where_querry += f"{name}, "
         where_querry = where_querry[:-2] + ')) LIKE LOWER(%s)'
         return where_querry
+
+    @fetch_results_with_head_without_args
+    def universal_select(self, querry):
+        return querry
+
+    @execute_query_without_args
+    def universal_querry(self, querry):
+        return querry

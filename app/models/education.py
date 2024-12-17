@@ -6,6 +6,9 @@ class EducationalInstitution(BaseModel):
 
     def __init__(self, id: int | str, name: str) -> None:
         super().__init__(id)
+        if len(name) > 50:
+            raise Exception(f'Значение {name} слишком большое.'
+                            'Введите меньше 50 символов')
         self.name = name
 
 
@@ -14,6 +17,9 @@ class EducationLevel(BaseModel):
 
     def __init__(self, id: int | str, name: str) -> None:
         super().__init__(id)
+        if len(name) > 50:
+            raise Exception(f'Значение {name} слишком большое.'
+                            'Введите меньше 50 символов')
         self.name = name
 
 
@@ -22,4 +28,7 @@ class EducationDocument(BaseModel):
 
     def __init__(self, id: int | str, name: str) -> None:
         super().__init__(id)
+        if len(name) > 50:
+            raise Exception(f'Значение {name} слишком большое.'
+                            'Введите меньше 50 символов')
         self.name = name
